@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -30,7 +31,8 @@ public class Event {
     private int maxAttendees;
     @Column(name = "is_cancelled")
     private boolean isCancelled;
-    @Column(name = "creation_date")
+    @CreationTimestamp
+    @Column(name = "creation_date", updatable=false)
     private LocalDateTime creationDate;
     @ManyToOne
     @JoinColumn(name = "creator_id")
