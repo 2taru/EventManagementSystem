@@ -35,7 +35,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDTO getRoleByUserId(int userId) {
 
-        UserRole userRole = userRoleRepository.findByUserId(userId)
+        UserRole userRole = userRoleRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new /*RoleNotFoundException*/RuntimeException("User with id = " + userId + " - don't have a role!"));
 
         return RoleMapper.mapToDto(userRole.getRole());

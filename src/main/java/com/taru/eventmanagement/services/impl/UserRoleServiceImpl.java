@@ -34,7 +34,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
         if (role.getName().equals("ROLE_ADMIN")){
             throw new /*AccessDeniedException*/RuntimeException("You can't create user_role with role ADMIN!");
-        } else if (userRoleRepository.existsByUserId(userId)) {
+        } else if (userRoleRepository.existsByUserUserId(userId)) {
             throw new /*UserRoleException*/RuntimeException("User with id = " + userId + " already have Role!");
         }
 
@@ -51,7 +51,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public void deleteUserRoleByUserId(int userId) {
 
-        UserRole userRole = userRoleRepository.findByUserId(userId)
+        UserRole userRole = userRoleRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new /*UserRoleException*/RuntimeException("User with id = " + userId + " - don't have a role!"));
         if (userRole.getRole().getName().equals("ROLE_ADMIN")){
             throw new /*AccessDeniedException*/RuntimeException("You can't delete role of user with role ADMIN!");

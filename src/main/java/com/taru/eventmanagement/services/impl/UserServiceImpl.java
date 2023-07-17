@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(int userId) {
 
-        UserRole userRole = userRoleRepository.findByUserId(userId)
+        UserRole userRole = userRoleRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User with id = " + userId + " - does not have a role!"));
 
         if (userRole.getRole().getName().equals("ROLE_ADMIN")) {

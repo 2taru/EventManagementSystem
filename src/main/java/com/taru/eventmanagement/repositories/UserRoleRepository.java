@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface UserRoleRepository extends JpaRepository<UserRole, UserRoleId> {
 
-    boolean existsByUserId(Integer userId);
-    Optional<UserRole> findByUserId(Integer userId);
+    boolean existsByUserUserId(Integer userId);
+    Optional<UserRole> findByUserUserId(Integer userId);
     void deleteById(UserRoleId userRoleId);
 }
