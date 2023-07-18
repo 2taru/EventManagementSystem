@@ -2,9 +2,11 @@ package com.taru.eventmanagement.services.impl;
 
 import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.mappers.EventMapper;
+import com.taru.eventmanagement.mappers.UserMapper;
 import com.taru.eventmanagement.models.Event;
 import com.taru.eventmanagement.repositories.EventRepository;
 import com.taru.eventmanagement.services.EventService;
+import com.taru.eventmanagement.services.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,15 +15,19 @@ import java.util.List;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final UserService userService;
 
-    public EventServiceImpl(EventRepository eventRepository) {
+    public EventServiceImpl(EventRepository eventRepository, UserService userService) {
         this.eventRepository = eventRepository;
+        this.userService = userService;
     }
 
     @Override
     public EventDTO createEvent(EventDTO eventDTO) {
 
         Event event = EventMapper.mapToEntity(eventDTO);
+
+        event.setCreator(UserMapper.mapToEntity(userService.getUserById(3)));
 
         event = eventRepository.save(event);
 
