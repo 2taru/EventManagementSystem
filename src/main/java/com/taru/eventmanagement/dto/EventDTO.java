@@ -16,8 +16,10 @@ public class EventDTO {
     private int eventId;
     private String name;
     private String description;
+    private String photoUrl;
     private LocalDateTime dateTime;
     private int maxAttendees;
+    private int currentAttendees;
     private boolean isCancelled;
     private LocalDateTime creationDate;
     private UserDTO creator;

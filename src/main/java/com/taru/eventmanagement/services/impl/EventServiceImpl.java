@@ -36,6 +36,7 @@ public class EventServiceImpl implements EventService {
 
         event.setName(eventDTO.getName());
         event.setDescription(eventDTO.getDescription());
+        event.setPhotoUrl(eventDTO.getPhotoUrl());
         event.setDateTime(eventDTO.getDateTime());
         event.setMaxAttendees(eventDTO.getMaxAttendees());
         event.setCancelled(eventDTO.isCancelled());

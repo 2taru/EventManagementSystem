@@ -25,10 +25,14 @@ public class Event {
     private String name;
     @Column(name = "description")
     private String description;
+    @Column(name = "photo_url")
+    private String photoUrl;
     @Column(name = "date_time")
     private LocalDateTime dateTime;
     @Column(name = "max_attendees")
     private int maxAttendees;
+    @Column(name = "current_attendees")
+    private int currentAttendees;
     @Column(name = "is_cancelled")
     private boolean isCancelled;
     @CreationTimestamp
