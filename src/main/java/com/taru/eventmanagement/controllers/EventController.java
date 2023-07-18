@@ -62,4 +62,14 @@ public class EventController {
 
         return "redirect:/event";
     }
+
+    @GetMapping("/event/{eventId}")
+    public String eventDetails(@PathVariable("eventId") int eventId, Model model){
+
+        EventDTO event = eventService.getEventById(eventId);
+
+        model.addAttribute("event", event);
+
+        return "event-detail";
+    }
 }
