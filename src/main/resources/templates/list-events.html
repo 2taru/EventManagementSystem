@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html
         lang="en"
-        xmlns:th="http://thymeleaf.org"
+        xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layout}"
 >
@@ -23,14 +23,14 @@
             <div class="row gx-5">
                 <div th:each="event :${events}" class=" col-lg-6 d-flex align-items-center">
                     <div class="position-relative">
-                        <img class="img-fluid rounded-3 mb-3" th:src="${event.photoUrl != null} ? ${event.photoUrl} : 'https://th.bing.com/th/id/R.bc37f4dfb38a528d07d37c1e471756b8?rik=HGzkv4tavCSpzA&pid=ImgRaw&r=0'" alt="No Image"/>
-                        <!--                        <img class="img-fluid rounded-3 mb-3" th:if="${event.photoUrl != null}" th:src="${event.photoUrl}" />-->
-                        <!--                        <img class="img-fluid rounded-3 mb-3" th:if="${event.photoUrl == null}" src="https://th.bing.com/th/id/R.bc37f4dfb38a528d07d37c1e471756b8?rik=HGzkv4tavCSpzA&pid=ImgRaw&r=0" />-->
+                        <img class="img-fluid rounded-3 mb-3" th:if="${event.photoUrl != null}" th:src="${event.photoUrl}" />
+                        <img class="img-fluid rounded-3 mb-3" th:if="${#strings.isEmpty(event.photoUrl)}" src="https://th.bing.com/th/id/R.bc37f4dfb38a528d07d37c1e471756b8?rik=HGzkv4tavCSpzA&pid=ImgRaw&r=0" />
                         <div class="mt-auto d-flex justify-content-between align-items-center">
                             <a th:text="${event.name}" class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="#!"></a>
                             <div th:text="'Attendees: ' + ${event.currentAttendees} + '/' + ${event.maxAttendees}"></div>
                         </div>
                     </div>
+                    <a class="btn btn-primary" th:href="@{/event/{id}/edit(id=${event.eventId})}">Edit</a>
                 </div>
             </div>
         </div>
