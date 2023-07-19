@@ -72,6 +72,16 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<EventDTO> searchEvents(String query) {
+
+        List<Event> events = eventRepository.searchEvents(query);
+
+        return events.stream()
+                .map(EventMapper::mapToDto)
+                .toList();
+    }
+
+    @Override
     public void deleteEventById(int eventId) {
 
         eventRepository.deleteById(eventId);
