@@ -17,6 +17,7 @@ public class EventMapper {
                 .currentAttendees(event.getCurrentAttendees())
                 .isCancelled(event.isCancelled())
                 .creationDate(event.getCreationDate())
+                .creator(UserMapper.mapToDto(event.getCreator()))
                 .build();
     }
 
@@ -32,6 +33,7 @@ public class EventMapper {
                 .currentAttendees(eventDTO.getCurrentAttendees())
                 .isCancelled(eventDTO.isCancelled())
                 .creationDate(eventDTO.getCreationDate())
+                .creator(UserMapper.mapToEntity(eventDTO.getCreator()))
                 .build();
     }
 }

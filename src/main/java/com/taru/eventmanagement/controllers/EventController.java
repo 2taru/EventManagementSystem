@@ -1,7 +1,10 @@
 package com.taru.eventmanagement.controllers;
 
+import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventDTO;
+import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.services.EventService;
+import com.taru.eventmanagement.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +15,11 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
+    private final UserService userService;
 
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, UserService userService) {
         this.eventService = eventService;
+        this.userService = userService;
     }
 
     @GetMapping("/event")
@@ -24,7 +29,7 @@ public class EventController {
 
         model.addAttribute("events", events);
 
-        return "list-events";
+        return "event-list";
     }
 
     @GetMapping("/event/search")
@@ -34,7 +39,7 @@ public class EventController {
 
         model.addAttribute("events", events);
 
-        return "list-events";
+        return "event-list";
     }
 
     @GetMapping("/event/create")
@@ -76,6 +81,14 @@ public class EventController {
         EventDTO event = eventService.getEventById(eventId);
 
         model.addAttribute("event", event);
+
+        String username = SecurityUtil.getSessionUser();
+        UserDTO user = new UserDTO();
+        if (username != null){
+            user = userService.getUserByUsername(username);
+        }
+
+        model.addAttribute("user", user);
 
         return "event-detail";
     }

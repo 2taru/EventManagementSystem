@@ -1,5 +1,6 @@
 package com.taru.eventmanagement.services.impl;
 
+import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.mappers.EventMapper;
 import com.taru.eventmanagement.mappers.UserMapper;
@@ -25,9 +26,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDTO createEvent(EventDTO eventDTO) {
 
+        eventDTO.setCreator(userService.getUserByUsername(SecurityUtil.getSessionUser()));
         Event event = EventMapper.mapToEntity(eventDTO);
-
-        event.setCreator(UserMapper.mapToEntity(userService.getUserById(3)));
 
         event = eventRepository.save(event);
 
