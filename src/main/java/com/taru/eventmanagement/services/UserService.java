@@ -16,6 +16,10 @@ public interface UserService {
 
     UserDTO getUserById(int userId);
 
+    UserDTO getUserByUsername(String username);
+
+    UserDTO getUserByEmail(String email);
+
     List<UserDTO> getAllUsers();
 
     void deleteUserById(int userId);

@@ -88,6 +88,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO getUserByUsername(String username) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new /*UserNotFoundException*/RuntimeException("User with username = " + username + " - not found!"));
+
+        UserDTO result = UserMapper.mapToDto(user);
+        result.setRole(roleService.getRoleByUserId(user.getUserId()));
+
+        return result;
+    }
+
+    @Override
+    public UserDTO getUserByEmail(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new /*UserNotFoundException*/RuntimeException("User with email = " + email + " - not found!"));
+
+        UserDTO result = UserMapper.mapToDto(user);
+        result.setRole(roleService.getRoleByUserId(user.getUserId()));
+
+        return result;
+    }
+
+    @Override
     public List<UserDTO> getAllUsers() {
 
         List<User> users = userRepository.findAll();

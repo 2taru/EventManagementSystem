@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Registration</title>
+
+</head>
+<body layout:fragment="body" class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+
+    <!-- Page Content-->
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <div class="col-md-6 col-sm-12">
+<!--                <div th:if="${param.fail}" class="alert alert-success">-->
+<!--                    Username or email already exists-->
+<!--                </div>-->
+                <div class="login-form">
+                    <form method="post" role="form" th:action="@{/register/save}" th:object="${user}">
+                        <div class="form-group mt-2">
+                            <label class="mx-2">Username</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Username"
+                                    th:field="*{username}">
+                        </div>
+                        <!--            <p th:if="${#fields.hasErrors('username')}" class="text-danger"></p>-->
+                        <div class="form-group mt-2">
+                            <label class="mx-2">Email</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Email"
+                                    th:field="*{email}">
+                        </div>
+                        <!--            <p th:if="${#fields.hasErrors('email')}" class="text-danger"></p>-->
+                        <div class="form-group mt-2">
+                            <label class="mx-2">Password</label>
+                            <input
+                                    type="password"
+                                    class="form-control"
+                                    placeholder="Password"
+                                    th:field="*{password}">
+                        </div>
+                        <!--            <p th:if="${#fields.hasErrors('password')}" class="text-danger"></p>-->
+                        <a th:href="@{/login}" class="btn btn-dark mt-2">Login here.</a>
+                        <button th:href="@{/register}" type="submit" class="btn btn-secondary mt-2">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

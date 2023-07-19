@@ -37,8 +37,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownBlog" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Profile</a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownBlog">
-                        <li><a class="dropdown-item" href="blog-home.html">Log in</a></li>
-                        <li><a class="dropdown-item" href="blog-post.html">Log out</a></li>
+                        <li><a class="dropdown-item" th:href="@{/login}">Log in</a></li>
+                        <li><a class="dropdown-item" th:href="@{/register}">Register</a></li>
+                        <li><a class="dropdown-item" th:href="@{/logout}">Log out</a></li>
                     </ul>
                 </li>
             </ul>
