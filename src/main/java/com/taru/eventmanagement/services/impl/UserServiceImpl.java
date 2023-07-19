@@ -9,6 +9,7 @@ import com.taru.eventmanagement.repositories.UserRoleRepository;
 import com.taru.eventmanagement.services.RoleService;
 import com.taru.eventmanagement.services.UserRoleService;
 import com.taru.eventmanagement.services.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +21,14 @@ public class UserServiceImpl implements UserService {
     private final UserRoleService userRoleService;
     private final RoleService roleService;
     private final UserRoleRepository userRoleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleService userRoleService, RoleService roleService, UserRoleRepository userRoleRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleService userRoleService, RoleService roleService, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userRoleService = userRoleService;
         this.roleService = roleService;
         this.userRoleRepository = userRoleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -44,8 +47,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO createUser(UserDTO userDTO) {
 
         User user = UserMapper.mapToEntity(userDTO);
-        //TODO security
-        //user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user = userRepository.save(user);
 
         userRoleService.createUserRole(user.getUserId());
