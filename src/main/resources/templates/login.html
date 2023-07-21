@@ -16,14 +16,17 @@
 
     <!-- Page Content-->
     <section class="py-5">
-        <div class="container px-5 my-5">
+        <div class="container px-5 my-5 d-flex justify-content-center">
             <div class="col-md-6 col-sm-12">
-<!--                <div th:if="${param.error}" class="alert alert-success">-->
-<!--                    Invalid username and password.-->
-<!--                </div>-->
-<!--                <div th:if="${param.logout}" class="alert alert-success">-->
-<!--                    You have been logged out.-->
-<!--                </div>-->
+                <div th:if="${param.error}" class="alert alert-danger">
+                    Invalid username or password.
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success">
+                    You have been logged out.
+                </div>
+                <div th:if="${param.success}" class="alert alert-success">
+                    You are registered successfully!
+                </div>
                 <div class="login-form">
                     <form method="post" th:action="@{/login}">
                         <div class="form-group mt-2">
@@ -44,8 +47,10 @@
                                     placeholder="Password"
                                     name="password">
                         </div>
-                        <a th:href="@{/register}" class="btn btn-dark mt-2">Don't have an account? Register here.</a>
-                        <button type="submit" value="Log in" class="btn btn-secondary mt-2">Login</button>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" value="Log in" class="btn btn-secondary mt-3">Login</button>
+                            <a th:href="@{/register}" class="btn btn-dark mt-3">Don't have an account? Register here.</a>
+                        </div>
                     </form>
                 </div>
             </div>

@@ -20,7 +20,7 @@
     <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">Event Manager</title>
 </head>
 
-<div class="d-flex flex-direction-column">
+<body class="d-flex flex-column min-vh-100">
 
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -54,7 +54,7 @@
 
 
     <!-- Body (injection point) -->
-    <body layout:fragment="body"></body>
+    <content layout:fragment="body"></content>
 
     <!-- Footer-->
     <footer class="bg-dark py-4 mt-auto">
@@ -68,6 +68,6 @@
         </div>
     </footer>
 
-</div>
+</body>
 
 </html>
