@@ -104,7 +104,7 @@ public class EventController {
 
         model.addAttribute("user", user);
 
-        return "event-detail";
+        return "event-details";
     }
 
     @GetMapping("/event/{eventId}/delete")

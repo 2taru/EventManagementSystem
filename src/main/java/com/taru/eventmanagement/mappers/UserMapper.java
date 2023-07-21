@@ -13,6 +13,9 @@ public class UserMapper {
                 .password(user.getPassword())
                 .username(user.getUsername())
                 .registrationDate(user.getRegistrationDate())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .photoUrl(user.getPhotoUrl())
                 .build();
     }
 
@@ -24,6 +27,9 @@ public class UserMapper {
                 .password(userDTO.getPassword())
                 .username(userDTO.getUsername())
                 .registrationDate(userDTO.getRegistrationDate())
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .photoUrl(userDTO.getPhotoUrl())
                 .build();
     }
 }

@@ -26,5 +26,8 @@ public class UserDTO {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Password is mandatory and must contain at least eight characters, at least one letter and one number!")
     private String password;
     private LocalDateTime registrationDate;
+    private String firstName;
+    private String lastName;
+    private String photoUrl;
     private RoleDTO role;
 }

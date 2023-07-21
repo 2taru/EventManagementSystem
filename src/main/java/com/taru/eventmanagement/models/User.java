@@ -27,6 +27,12 @@ public class User {
     private String password;
     @Column(name = "username")
     private String username;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name = "photo_url")
+    private String photoUrl;
     @CreationTimestamp
     @Column(name = "registration_date", updatable = false)
     private LocalDateTime registrationDate;
