@@ -25,7 +25,7 @@ public class EventController {
     }
 
     @GetMapping("/event")
-    public String listEvents(Model model){
+    public String listEvents(Model model) {
 
         List<EventDTO> events = eventService.getAllEvents();
 
@@ -45,16 +45,16 @@ public class EventController {
     }
 
     @GetMapping("/event/create")
-    public String createEventForm(Model model){
+    public String createEventForm(Model model) {
 
         model.addAttribute("event", new EventDTO());
         return "event-create";
     }
 
     @PostMapping("/event/create")
-    public String createEvent(@Valid @ModelAttribute("event") EventDTO event, BindingResult bindingResult, Model model){
+    public String createEvent(@Valid @ModelAttribute("event") EventDTO event, BindingResult bindingResult, Model model) {
 
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
 
             model.addAttribute("event", event);
             return "event-create";
@@ -66,7 +66,7 @@ public class EventController {
     }
 
     @GetMapping("/event/{eventId}/edit")
-    public String updateEventForm(@PathVariable("eventId") int eventId, Model model){
+    public String updateEventForm(@PathVariable("eventId") int eventId, Model model) {
 
         EventDTO event = eventService.getEventById(eventId);
 
@@ -75,16 +75,22 @@ public class EventController {
     }
 
     @PostMapping("/event/{eventId}/edit")
-    public String editEvent(@PathVariable("eventId") int eventId, @ModelAttribute("event") EventDTO event){
+    public String editEvent(@PathVariable("eventId") int eventId, @Valid @ModelAttribute("event") EventDTO event, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+
+            model.addAttribute("event", event);
+            return "event-edit";
+        }
 
         event.setEventId(eventId);
         eventService.updateEventById(eventId, event);
 
-        return "redirect:/event";
+        return "redirect:/event/" + eventId + "?success";
     }
 
     @GetMapping("/event/{eventId}")
-    public String eventDetails(@PathVariable("eventId") int eventId, Model model){
+    public String eventDetails(@PathVariable("eventId") int eventId, Model model) {
 
         EventDTO event = eventService.getEventById(eventId);
 
@@ -92,7 +98,7 @@ public class EventController {
 
         String username = SecurityUtil.getSessionUser();
         UserDTO user = new UserDTO();
-        if (username != null){
+        if (username != null) {
             user = userService.getUserByUsername(username);
         }
 
@@ -102,7 +108,7 @@ public class EventController {
     }
 
     @GetMapping("/event/{eventId}/delete")
-    public String deleteEvent(@PathVariable("eventId") int eventId){
+    public String deleteEvent(@PathVariable("eventId") int eventId) {
 
         eventService.deleteEventById(eventId);
 
