@@ -90,7 +90,7 @@
                     <!-- Action buttons widget-->
                     <div class="card mb-4">
                         <div class="card-header">Actions</div>
-                        <div class="d-flex justify-content-sm-around align-items-center">
+                        <div class="d-flex justify-content-around align-items-center">
                             <a th:if="${user.userId} == ${event.creator.userId}" class="btn btn-primary m-2 flex-fill" th:href="@{/event/{id}/edit(id=${event.eventId})}">Edit</a>
                             <a th:if="${user.userId} == ${event.creator.userId}" class="btn btn-danger m-2 flex-fill" th:href="@{/event/{id}/delete(id=${event.eventId})}">Delete</a>
                             <a th:if="${user.userId} != ${event.creator.userId}" class="btn btn-success m-2 flex-fill" th:href="@{/event/{id}(id=${event.eventId})}">Attend</a>
