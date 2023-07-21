@@ -12,4 +12,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> searchEvents(String query);
 
     List<Event> findEventByCreatorUserId(int creatorId);
+
+    int countByCreatorUserId(int userId);
 }
