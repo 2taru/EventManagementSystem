@@ -20,12 +20,14 @@
             <div class="row">
                 <div class="container">
                     <div class="my-5 mx-5">
+                        <div th:if="${param.success}" class="alert alert-success">
+                            Event successfully created!
+                        </div>
                         <h1 class="fw-bolder text-break" th:text="${event.name}"></h1>
                     </div>
                 </div>
-                <!-- Blog entries-->
                 <div class="col-lg-8">
-                    <!-- Featured blog post-->
+                    <!-- Event Details-->
                     <div class="card mb-4">
 <!--                        <a href="#!"><img class="card-img-top" th:src="${event.photoUrl}" alt="..." /></a>-->
                         <img class="card-img-top w-auto mx-4 my-3" th:if="${event.photoUrl != null}" th:src="${event.photoUrl}" />

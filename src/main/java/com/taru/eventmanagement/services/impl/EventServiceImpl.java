@@ -27,6 +27,7 @@ public class EventServiceImpl implements EventService {
     public EventDTO createEvent(EventDTO eventDTO) {
 
         eventDTO.setCreator(userService.getUserByUsername(SecurityUtil.getSessionUser()));
+        eventDTO.setDescription(eventDTO.getDescription().isEmpty() || eventDTO.getDescription().isBlank() ? "No description." : eventDTO.getDescription());
         Event event = EventMapper.mapToEntity(eventDTO);
 
         event = eventRepository.save(event);

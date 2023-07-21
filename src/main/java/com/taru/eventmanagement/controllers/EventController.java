@@ -5,8 +5,10 @@ import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.services.EventService;
 import com.taru.eventmanagement.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,11 +52,17 @@ public class EventController {
     }
 
     @PostMapping("/event/create")
-    public String createEvent(@ModelAttribute("event") EventDTO event){
+    public String createEvent(@Valid @ModelAttribute("event") EventDTO event, BindingResult bindingResult, Model model){
 
-        eventService.createEvent(event);
+        if (bindingResult.hasErrors()){
 
-        return "redirect:/event";
+            model.addAttribute("event", event);
+            return "event-create";
+        }
+
+        int eventId = eventService.createEvent(event).getEventId();
+
+        return "redirect:/event/" + eventId + "?success";
     }
 
     @GetMapping("/event/{eventId}/edit")
