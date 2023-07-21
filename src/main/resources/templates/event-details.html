@@ -71,7 +71,7 @@
                                      class="rounded-circle card-text" style="width: 15%;" />
                             <img th:if="${event.creator.photoUrl} != null" th:src="${event.creator.photoUrl}"
                                      class="rounded-circle card-text" style="width: 15%;" />
-                            <a class="card-text mx-2 h4 text-decoration-none text-dark" th:href="@{/user/@{username}(username=${event.creator.username})}" th:text="'@' + ${event.creator.username}"></a>
+                            <a class="card-text mx-2 h4 text-decoration-none text-dark" th:href="@{/user/{username}(username=${event.creator.username})}" th:text="'@' + ${event.creator.username}"></a>
                         </div>
                         <div class="card-body small text-muted" th:text="'Creation date: ' + ${event.creationDate.toLocalDate()}"></div>
                     </div>

@@ -43,7 +43,7 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownBlog">
                             <li><a sec:authorize="!isAuthenticated()" class="dropdown-item" th:href="@{/login}">Log in</a></li>
                             <li><a sec:authorize="!isAuthenticated()" class="dropdown-item" th:href="@{/register}">Register</a></li>
-                            <li><a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{/profile}">Profile</a></li>
+                            <li><a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{/user/{username}(username=${#authentication.name})}">Profile</a></li>
                             <li><a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{/logout}">Log out</a></li>
                         </ul>
                     </li>

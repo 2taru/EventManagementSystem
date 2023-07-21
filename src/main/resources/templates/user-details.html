@@ -38,7 +38,7 @@
                         <div class="d-flex justify-content-around text-center mt-5 mb-2">
                             <div>
                                 <p class="mb-2 h5">5</p>
-                                <a th:href="@{/event}" class="text-muted mb-0 text-decoration-none">Events created</a>
+                                <a th:href="@{/user/{userId}/created-events(userId=${user.userId})}" class="text-muted mb-0 text-decoration-none">Events created</a>
                             </div>
                             <div>
                                 <p class="mb-2 h5">14</p>

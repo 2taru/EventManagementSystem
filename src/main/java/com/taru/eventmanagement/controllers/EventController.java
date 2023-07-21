@@ -34,6 +34,16 @@ public class EventController {
         return "event-list";
     }
 
+    @GetMapping("/user/{userId}/created-events")
+    public String eventListByCreatorId(@PathVariable("userId") int userId, Model model) {
+
+        List<EventDTO> events = eventService.getAllEventsByCreatorId(userId);
+
+        model.addAttribute("events", events);
+
+        return "event-list";
+    }
+
     @GetMapping("/event/search")
     public String searchClub(@RequestParam(value = "query") String query, Model model) {
 
@@ -62,7 +72,7 @@ public class EventController {
 
         int eventId = eventService.createEvent(event).getEventId();
 
-        return "redirect:/event/" + eventId + "?success";
+        return "redirect:/event/%d?success".formatted(eventId);
     }
 
     @GetMapping("/event/{eventId}/edit")
@@ -86,7 +96,7 @@ public class EventController {
         event.setEventId(eventId);
         eventService.updateEventById(eventId, event);
 
-        return "redirect:/event/" + eventId + "?success";
+        return "redirect:/event/%d?success".formatted(eventId);
     }
 
     @GetMapping("/event/{eventId}")

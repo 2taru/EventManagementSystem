@@ -14,6 +14,8 @@ public interface EventService {
 
     List<EventDTO> getAllEvents();
 
+    List<EventDTO> getAllEventsByCreatorId(int creatorId);
+
     List<EventDTO> searchEvents(String query);
 
     void deleteEventById(int eventId);

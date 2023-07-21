@@ -1,7 +1,6 @@
 package com.taru.eventmanagement.controllers;
 
 import com.taru.eventmanagement.config.SecurityUtil;
-import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.services.UserService;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/@{username}")
+    @GetMapping("/user/{username}")
     public String userPage(@PathVariable("username") String username, Model model) {
 
         UserDTO user = new UserDTO();
@@ -26,7 +25,7 @@ public class UserController {
             user = userService.getUserByUsername(username);
         }
 
-        boolean allowEditProfile = SecurityUtil.getSessionUser().equals(user.getUsername());
+        boolean allowEditProfile = user.getUsername().equals(SecurityUtil.getSessionUser());
 
         model.addAttribute("allowEditProfile", allowEditProfile);
         model.addAttribute("user", user);

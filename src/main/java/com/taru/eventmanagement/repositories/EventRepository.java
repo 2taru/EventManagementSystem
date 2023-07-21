@@ -10,4 +10,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     @Query("SELECT e from Event e WHERE e.name LIKE CONCAT('%', :query, '%')")
     List<Event> searchEvents(String query);
+
+    List<Event> findEventByCreatorUserId(int creatorId);
 }

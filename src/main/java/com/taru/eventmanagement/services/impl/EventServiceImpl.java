@@ -3,7 +3,6 @@ package com.taru.eventmanagement.services.impl;
 import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.mappers.EventMapper;
-import com.taru.eventmanagement.mappers.UserMapper;
 import com.taru.eventmanagement.models.Event;
 import com.taru.eventmanagement.repositories.EventRepository;
 import com.taru.eventmanagement.services.EventService;
@@ -66,6 +65,16 @@ public class EventServiceImpl implements EventService {
     public List<EventDTO> getAllEvents() {
 
         List<Event> events = eventRepository.findAll();
+
+        return events.stream()
+                .map(EventMapper::mapToDto)
+                .toList();
+    }
+
+    @Override
+    public List<EventDTO> getAllEventsByCreatorId(int creatorId) {
+
+        List<Event> events = eventRepository.findEventByCreatorUserId(creatorId);
 
         return events.stream()
                 .map(EventMapper::mapToDto)
