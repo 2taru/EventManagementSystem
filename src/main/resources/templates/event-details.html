@@ -81,7 +81,10 @@
                         <div class="d-flex justify-content-around align-items-center">
                             <a th:if="${user.userId} == ${event.creator.userId}" class="btn btn-primary m-2 flex-fill" th:href="@{/event/{id}/edit(id=${event.eventId})}">Edit</a>
                             <a th:if="${user.userId} == ${event.creator.userId}" class="btn btn-danger m-2 flex-fill" th:href="@{/event/{id}/delete(id=${event.eventId})}">Delete</a>
-                            <a th:if="${user.userId} != ${event.creator.userId}" class="btn btn-success m-2 flex-fill" th:href="@{/event/{id}(id=${event.eventId})}">Attend</a>
+                            <div th:if="${user.userId} != ${event.creator.userId}" class="flex-fill d-flex">
+                                <a th:if="not ${isAttended}" class="btn btn-success m-2 flex-fill" th:href="@{/event/{id}/attend(id=${event.eventId})}">Attend to this Event</a>
+                                <a th:if="${isAttended}" class="btn btn-warning m-2 flex-fill" th:href="@{/event/{id}/skip(id=${event.eventId})}">Skip this Event</a>
+                            </div>
                         </div>
                     </div>
                     <!-- Search widget-->

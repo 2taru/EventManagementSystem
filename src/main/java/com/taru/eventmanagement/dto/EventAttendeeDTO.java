@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class EventAttendeeDTO {
 
-    private int eventAttendeeId;
     private EventDTO event;
     private UserDTO attendee;
     private LocalDateTime registrationDate;

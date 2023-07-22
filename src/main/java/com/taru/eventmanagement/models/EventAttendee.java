@@ -14,22 +14,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "event_attendee")
+@Table(name = "event_attendees")
 public class EventAttendee {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_attendee_id")
-    private int eventAttendeeId;
+    @EmbeddedId
+    private EventAttendeeId id;
     @ManyToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fc_event_if_events"))
     private Event event;
     @ManyToOne
-    @JoinColumn(name = "attendee_id")
+    @JoinColumn(name = "attendee_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fc_attendee_id_users"))
     private User attendee;
+    @Column(name = "registration_date")
     @CreationTimestamp
-    @Column(name = "registration_date", updatable = false)
     private LocalDateTime registrationDate;
-    @Column(name = "status")
+    @Column(name = "status", length = 45)
     private String status;
 }

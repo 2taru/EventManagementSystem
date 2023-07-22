@@ -1,12 +1,15 @@
 package com.taru.eventmanagement.services.impl;
 
+import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventAttendeeDTO;
 import com.taru.eventmanagement.dto.EventDTO;
+import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.mappers.EventAttendeeMapper;
 import com.taru.eventmanagement.mappers.EventMapper;
 import com.taru.eventmanagement.mappers.UserMapper;
 import com.taru.eventmanagement.models.Event;
 import com.taru.eventmanagement.models.EventAttendee;
+import com.taru.eventmanagement.models.EventAttendeeId;
 import com.taru.eventmanagement.models.User;
 import com.taru.eventmanagement.repositories.EventAttendeeRepository;
 import com.taru.eventmanagement.repositories.EventRepository;
@@ -30,10 +33,11 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     }
 
     @Override
-    public EventAttendeeDTO createEventAttendee(int eventId, int attendeeId, EventAttendeeDTO eventAttendeeDTO) {
+    public EventAttendeeDTO createEventAttendee(int eventId, EventAttendeeDTO eventAttendeeDTO) {
 
-        User user = userRepository.findById(attendeeId)
-                .orElseThrow(() -> new /*UserNotFoundException*/RuntimeException("User with id = " + attendeeId + " - not found!"));
+        String username = SecurityUtil.getSessionUser();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new /*UserNotFoundException*/RuntimeException("User with username = " + username + " - not found!"));
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new /*EventNotFoundException*/RuntimeException("Event with id = " + eventId + " - not found!"));
 
@@ -42,13 +46,14 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
 
         EventAttendee eventAttendee = EventAttendeeMapper.mapToEntity(eventAttendeeDTO);
 
+        eventAttendee.setId(new EventAttendeeId(event.getEventId(), user.getUserId()));
         EventAttendee updatedEventAttendee = eventAttendeeRepository.save(eventAttendee);
 
         return EventAttendeeMapper.mapToDto(updatedEventAttendee);
     }
 
     @Override
-    public EventAttendeeDTO updateEventAttendeeStatusById(int eventAttendeeId, EventAttendeeDTO eventDTO) {
+    public EventAttendeeDTO updateEventAttendeeStatusById(EventAttendeeId eventAttendeeId, EventAttendeeDTO eventDTO) {
 
         EventAttendee eventAttendee = eventAttendeeRepository.findById(eventAttendeeId)
                 .orElseThrow(() -> new /*EventAttendeeNotFoundException*/RuntimeException("EventAttendee with id = " + eventAttendeeId + " - not found!"));
@@ -61,7 +66,7 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     }
 
     @Override
-    public EventAttendeeDTO getEventAttendeeById(int eventAttendeeId) {
+    public EventAttendeeDTO getEventAttendeeById(EventAttendeeId eventAttendeeId) {
 
         EventAttendee eventAttendee = eventAttendeeRepository.findById(eventAttendeeId)
                 .orElseThrow(() -> new /*EventAttendeeNotFoundException*/RuntimeException("EventAttendee with id = " + eventAttendeeId + " - not found!"));
@@ -100,7 +105,7 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     }
 
     @Override
-    public void deleteEventAttendeeById(int eventAttendeeId) {
+    public void deleteEventAttendeeById(EventAttendeeId eventAttendeeId) {
 
         eventAttendeeRepository.deleteById(eventAttendeeId);
     }

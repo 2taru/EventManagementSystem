@@ -8,7 +8,6 @@ public class EventAttendeeMapper {
     public static EventAttendeeDTO mapToDto(EventAttendee eventAttendee) {
 
         return EventAttendeeDTO.builder()
-                .eventAttendeeId(eventAttendee.getEventAttendeeId())
                 .event(EventMapper.mapToDto(eventAttendee.getEvent()))
                 .attendee(UserMapper.mapToDto(eventAttendee.getAttendee()))
                 .registrationDate(eventAttendee.getRegistrationDate())
@@ -19,7 +18,6 @@ public class EventAttendeeMapper {
     public static EventAttendee mapToEntity(EventAttendeeDTO eventAttendeeDTO) {
 
         return EventAttendee.builder()
-                .eventAttendeeId(eventAttendeeDTO.getEventAttendeeId())
                 .event(EventMapper.mapToEntity(eventAttendeeDTO.getEvent()))
                 .attendee(UserMapper.mapToEntity(eventAttendeeDTO.getAttendee()))
                 .registrationDate(eventAttendeeDTO.getRegistrationDate())

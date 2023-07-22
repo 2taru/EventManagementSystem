@@ -3,6 +3,8 @@ package com.taru.eventmanagement.controllers;
 import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.dto.UserDTO;
+import com.taru.eventmanagement.models.EventAttendeeId;
+import com.taru.eventmanagement.repositories.EventAttendeeRepository;
 import com.taru.eventmanagement.services.EventService;
 import com.taru.eventmanagement.services.UserService;
 import jakarta.validation.Valid;
@@ -18,10 +20,12 @@ public class EventController {
 
     private final EventService eventService;
     private final UserService userService;
+    private final EventAttendeeRepository eventAttendeeRepository;
 
-    public EventController(EventService eventService, UserService userService) {
+    public EventController(EventService eventService, UserService userService, EventAttendeeRepository eventAttendeeRepository) {
         this.eventService = eventService;
         this.userService = userService;
+        this.eventAttendeeRepository = eventAttendeeRepository;
     }
 
     @GetMapping("/event")
@@ -112,6 +116,9 @@ public class EventController {
             user = userService.getUserByUsername(username);
         }
 
+        model.addAttribute("isAttended", eventAttendeeRepository.existsById(
+                new EventAttendeeId(eventId, user.getUserId()))
+        );
         model.addAttribute("user", user);
 
         return "event-details";
