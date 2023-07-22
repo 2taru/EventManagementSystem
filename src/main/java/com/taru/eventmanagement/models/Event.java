@@ -36,7 +36,7 @@ public class Event {
     @Column(name = "is_cancelled")
     private boolean isCancelled;
     @CreationTimestamp
-    @Column(name = "creation_date", updatable=false)
+    @Column(name = "creation_date", updatable = false)
     private LocalDateTime creationDate;
     @ManyToOne
     @JoinColumn(name = "creator_id")
