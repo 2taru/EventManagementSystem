@@ -45,8 +45,8 @@
                                 <a th:href="@{/user/{userId}/created-events(userId=${user.userId})}" class="text-muted mb-0 text-decoration-none">Events created</a>
                             </div>
                             <div>
-                                <p class="mb-2 h5">14</p>
-                                <a th:href="@{/event}" class="text-muted mb-0 text-decoration-none">Attended on</a>
+                                <p class="mb-2 h5" th:text="${attendedEventsCount}"></p>
+                                <a th:href="@{/user/{userId}/attended-events(userId=${user.userId})}" class="text-muted mb-0 text-decoration-none">Attended on</a>
                             </div>
                         </div>
                     </div>

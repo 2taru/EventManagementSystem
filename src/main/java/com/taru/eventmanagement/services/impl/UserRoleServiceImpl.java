@@ -1,5 +1,6 @@
 package com.taru.eventmanagement.services.impl;
 
+import com.taru.eventmanagement.exception.AccessDeniedException;
 import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.models.Role;
 import com.taru.eventmanagement.models.User;
@@ -34,7 +35,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                 .orElseThrow(() -> new MyNotFoundException("Role = \"ROLE_USER\" - not found!"));
 
         if (role.getName().equals("ROLE_ADMIN")){
-            throw new RuntimeException("You can't create user_role with role ADMIN!");
+            throw new AccessDeniedException("You can't create user_role with role ADMIN!");
         } else if (userRoleRepository.existsByUserUserId(userId)) {
             throw new RuntimeException("User with id = " + userId + " already have Role!");
         }
@@ -55,7 +56,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         UserRole userRole = userRoleRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new MyNotFoundException("User with id = " + userId + " - don't have a role!"));
         if (userRole.getRole().getName().equals("ROLE_ADMIN")){
-            throw new RuntimeException("You can't delete role of user with role ADMIN!");
+            throw new AccessDeniedException("You can't delete role of user with role ADMIN!");
         }
         userRoleRepository.deleteById(new UserRoleId(userId, userRole.getRole().getRoleId()));
     }

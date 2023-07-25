@@ -1,6 +1,7 @@
 package com.taru.eventmanagement.services.impl;
 
 import com.taru.eventmanagement.dto.UserDTO;
+import com.taru.eventmanagement.exception.AccessDeniedException;
 import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.mappers.UserMapper;
 import com.taru.eventmanagement.models.User;
@@ -134,7 +135,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User with id = " + userId + " - does not have a role!"));
 
         if (userRole.getRole().getName().equals("ROLE_ADMIN")) {
-            throw new RuntimeException("You can't delete user with role ADMIN!");
+            throw new AccessDeniedException("You can't delete user with role ADMIN!");
         }
 
         userRoleService.deleteUserRoleByUserId(userId);

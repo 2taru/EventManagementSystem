@@ -5,6 +5,7 @@ import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.models.EventAttendeeId;
 import com.taru.eventmanagement.repositories.EventAttendeeRepository;
+import com.taru.eventmanagement.services.EventAttendeeService;
 import com.taru.eventmanagement.services.EventService;
 import com.taru.eventmanagement.services.UserService;
 import jakarta.validation.Valid;
@@ -20,11 +21,13 @@ public class EventController {
 
     private final EventService eventService;
     private final UserService userService;
+    private final EventAttendeeService eventAttendeeService;
     private final EventAttendeeRepository eventAttendeeRepository;
 
-    public EventController(EventService eventService, UserService userService, EventAttendeeRepository eventAttendeeRepository) {
+    public EventController(EventService eventService, UserService userService, EventAttendeeService eventAttendeeService, EventAttendeeRepository eventAttendeeRepository) {
         this.eventService = eventService;
         this.userService = userService;
+        this.eventAttendeeService = eventAttendeeService;
         this.eventAttendeeRepository = eventAttendeeRepository;
     }
 
@@ -42,6 +45,16 @@ public class EventController {
     public String eventListByCreatorId(@PathVariable("userId") int userId, Model model) {
 
         List<EventDTO> events = eventService.getAllEventsByCreatorId(userId);
+
+        model.addAttribute("events", events);
+
+        return "event-list";
+    }
+
+    @GetMapping("/user/{userId}/attended-events")
+    public String eventListByAttendeeId(@PathVariable("userId") int userId, Model model) {
+
+        List<EventDTO> events = eventAttendeeService.getAllEventsByAttendeeId(userId);
 
         model.addAttribute("events", events);
 

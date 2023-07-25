@@ -11,4 +11,5 @@ public interface EventAttendeeRepository extends JpaRepository<EventAttendee, Ev
     List<EventAttendee> findByAttendeeUserId(int attendeeId);
     List<EventAttendee> findByEventEventId(int eventId);
     boolean existsById(EventAttendeeId eventAttendeeId);
+    int countByAttendeeUserId(int userId);
 }

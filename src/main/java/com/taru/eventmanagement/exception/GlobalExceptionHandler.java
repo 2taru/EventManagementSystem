@@ -38,4 +38,18 @@ public class GlobalExceptionHandler {
 
         return "error";
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public String handleUserAccessDeniedException(AccessDeniedException ex, WebRequest request, Model model) {
+
+        ErrorObject errorObject = new ErrorObject();
+
+        errorObject.setStatusCode(HttpStatus.FORBIDDEN.value() + " - Not found!");
+        errorObject.setMessage(ex.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        model.addAttribute("errorObject", errorObject);
+
+        return "error";
+    }
 }

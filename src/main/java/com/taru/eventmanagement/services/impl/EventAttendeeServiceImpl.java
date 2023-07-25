@@ -3,7 +3,6 @@ package com.taru.eventmanagement.services.impl;
 import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventAttendeeDTO;
 import com.taru.eventmanagement.dto.EventDTO;
-import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.mappers.EventAttendeeMapper;
 import com.taru.eventmanagement.mappers.EventMapper;
