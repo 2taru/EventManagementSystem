@@ -1,6 +1,7 @@
 package com.taru.eventmanagement.services.impl;
 
 import com.taru.eventmanagement.dto.RoleDTO;
+import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.mappers.RoleMapper;
 import com.taru.eventmanagement.models.Role;
 import com.taru.eventmanagement.models.UserRole;
@@ -27,7 +28,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleDTO getRoleById(int roleId) {
 
         Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new /*RoleNotFoundException*/RuntimeException("Role with id = " + roleId + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("Role with id = " + roleId + " - not found!"));
 
         return RoleMapper.mapToDto(role);
     }
@@ -36,7 +37,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleDTO getRoleByUserId(int userId) {
 
         UserRole userRole = userRoleRepository.findByUserUserId(userId)
-                .orElseThrow(() -> new /*RoleNotFoundException*/RuntimeException("User with id = " + userId + " - don't have a role!"));
+                .orElseThrow(() -> new MyNotFoundException("User with id = " + userId + " - don't have a role!"));
 
         return RoleMapper.mapToDto(userRole.getRole());
     }

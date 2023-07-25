@@ -2,6 +2,7 @@ package com.taru.eventmanagement.services.impl;
 
 import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventDTO;
+import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.mappers.EventMapper;
 import com.taru.eventmanagement.models.Event;
 import com.taru.eventmanagement.repositories.EventRepository;
@@ -38,7 +39,7 @@ public class EventServiceImpl implements EventService {
     public EventDTO updateEventById(int eventId, EventDTO eventDTO) {
 
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new /*EventNotFoundException*/RuntimeException("Event with id = " + eventId + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("Event with id = " + eventId + " - not found!"));
 
         event.setName(eventDTO.getName());
         event.setDescription(eventDTO.getDescription());
@@ -56,7 +57,7 @@ public class EventServiceImpl implements EventService {
     public EventDTO getEventById(int eventId) {
 
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new /*EventNotFoundException*/RuntimeException("Event with id = " + eventId + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("Event with id = " + eventId + " - not found!"));
 
         return EventMapper.mapToDto(event);
     }

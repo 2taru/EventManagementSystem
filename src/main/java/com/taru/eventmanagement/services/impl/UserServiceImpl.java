@@ -1,6 +1,7 @@
 package com.taru.eventmanagement.services.impl;
 
 import com.taru.eventmanagement.dto.UserDTO;
+import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.mappers.UserMapper;
 import com.taru.eventmanagement.models.User;
 import com.taru.eventmanagement.models.UserRole;
@@ -62,11 +63,11 @@ public class UserServiceImpl implements UserService {
     public UserDTO updateUserById(int userId, UserDTO userDTO) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new /*UserNotFoundException*/RuntimeException("User with id = " + userId + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("User with id = " + userId + " - not found!"));
 
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.setPassword(/*passwordEncoder.encode(*/userDTO.getPassword()/*)*/);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRegistrationDate(userDTO.getRegistrationDate());
 
         User updatedUser = userRepository.save(user);
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserById(int userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new /*UserNotFoundException*/RuntimeException("User with id = " + userId + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("User with id = " + userId + " - not found!"));
 
         UserDTO result = UserMapper.mapToDto(user);
         result.setRole(roleService.getRoleByUserId(user.getUserId()));
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserByUsername(String username) {
 
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new /*UserNotFoundException*/RuntimeException("User with username = " + username + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("User with username = " + username + " - not found!"));
 
         UserDTO result = UserMapper.mapToDto(user);
         result.setRole(roleService.getRoleByUserId(user.getUserId()));
@@ -105,7 +106,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserByEmail(String email) {
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new /*UserNotFoundException*/RuntimeException("User with email = " + email + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("User with email = " + email + " - not found!"));
 
         UserDTO result = UserMapper.mapToDto(user);
         result.setRole(roleService.getRoleByUserId(user.getUserId()));
@@ -133,7 +134,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User with id = " + userId + " - does not have a role!"));
 
         if (userRole.getRole().getName().equals("ROLE_ADMIN")) {
-            throw new /*AccessDeniedException*/RuntimeException("You can't delete user with role ADMIN!");
+            throw new RuntimeException("You can't delete user with role ADMIN!");
         }
 
         userRoleService.deleteUserRoleByUserId(userId);

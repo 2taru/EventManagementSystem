@@ -4,6 +4,7 @@ import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventAttendeeDTO;
 import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.dto.UserDTO;
+import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.mappers.EventAttendeeMapper;
 import com.taru.eventmanagement.mappers.EventMapper;
 import com.taru.eventmanagement.mappers.UserMapper;
@@ -37,9 +38,9 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
 
         String username = SecurityUtil.getSessionUser();
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new /*UserNotFoundException*/RuntimeException("User with username = " + username + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("User with username = " + username + " - not found!"));
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new /*EventNotFoundException*/RuntimeException("Event with id = " + eventId + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("Event with id = " + eventId + " - not found!"));
 
         eventAttendeeDTO.setAttendee(UserMapper.mapToDto(user));
         eventAttendeeDTO.setEvent(EventMapper.mapToDto(event));
@@ -56,7 +57,7 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     public EventAttendeeDTO updateEventAttendeeStatusById(EventAttendeeId eventAttendeeId, EventAttendeeDTO eventDTO) {
 
         EventAttendee eventAttendee = eventAttendeeRepository.findById(eventAttendeeId)
-                .orElseThrow(() -> new /*EventAttendeeNotFoundException*/RuntimeException("EventAttendee with id = " + eventAttendeeId + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("EventAttendee with id = " + eventAttendeeId + " - not found!"));
 
         eventAttendee.setStatus(eventDTO.getStatus());
 
@@ -69,7 +70,7 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     public EventAttendeeDTO getEventAttendeeById(EventAttendeeId eventAttendeeId) {
 
         EventAttendee eventAttendee = eventAttendeeRepository.findById(eventAttendeeId)
-                .orElseThrow(() -> new /*EventAttendeeNotFoundException*/RuntimeException("EventAttendee with id = " + eventAttendeeId + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("EventAttendee with id = " + eventAttendeeId + " - not found!"));
 
         return EventAttendeeMapper.mapToDto(eventAttendee);
     }

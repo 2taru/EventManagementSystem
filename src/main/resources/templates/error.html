@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Event Details</title>
+
+</head>
+<body layout:fragment="body" class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+
+    <!-- Error section -->
+    <section class="py-5">
+        <div class="container px-5 my-5 d-flex justify-content-center flex-column align-items-center">
+            <h1 class="display-4"
+                th:text="${errorObject} == null ? '404 - Page Not Found' : ${errorObject.statusCode}"></h1>
+            <p class="lead"
+                th:text="${errorObject} == null ? 'Oops! The page you are looking for does not exist.' : ${errorObject.message}"></p>
+            <a class="btn btn-primary" th:href="@{/event}">Go back to home</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>
