@@ -19,6 +19,10 @@
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-12 col-xl-4">
 
+                <div th:if="${param.success}" class="alert alert-success">
+                    Success!
+                </div>
+
                 <div class="card">
                     <div class="card-body text-center">
                         <div class="mt-3 mb-4">
@@ -48,6 +52,9 @@
                                 <p class="mb-2 h5" th:text="${attendedEventsCount}"></p>
                                 <a th:href="@{/user/{userId}/attended-events(userId=${user.userId})}" class="text-muted mb-0 text-decoration-none">Attended on</a>
                             </div>
+                        </div>
+                        <div th:if="${user.username} == ${#authentication.name}">
+                            <a th:href="@{/user/{userId}/edit(userId=${user.userId})}" class="btn btn-dark mt-2">Edit Profile</a>
                         </div>
                     </div>
                 </div>

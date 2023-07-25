@@ -29,7 +29,7 @@
                                 name="title"
                                 th:field="*{name}"
                                 placeholder="Title">
-<!--                        <p th:if="${#fields.hasErrors('title')}" class="text-danger" th:errors="*{title}"></p>-->
+                        <div class="alert alert-warning mt-2" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="description">Description</label>
@@ -40,7 +40,6 @@
                                 name="description"
                                 th:field="*{description}"
                                 placeholder="Description">
-                        <!--                        <p th:if="${#fields.hasErrors('title')}" class="text-danger" th:errors="*{title}"></p>-->
                     </div>
                     <div class="form-group col-md-6">
                         <label for="photoUrl">Photo Url</label>
@@ -51,7 +50,6 @@
                                 name="photoUrl"
                                 th:field="*{photoUrl}"
                                 placeholder="Photo Url">
-<!--                        <p th:if="${#fields.hasErrors('photoUrl')}" class="text-danger" th:errors="*{photoUrl}"></p>-->
                     </div>
                     <div class="form-group col-md-6">
                         <label for="dateTime">Date</label>
@@ -61,7 +59,7 @@
                                 id="dateTime"
                                 name="dateTime"
                                 th:field="*{dateTime}">
-                        <!--                        <p th:if="${#fields.hasErrors('photoUrl')}" class="text-danger" th:errors="*{photoUrl}"></p>-->
+                        <div class="alert alert-warning mt-2" th:if="${#fields.hasErrors('dateTime')}" th:errors="*{dateTime}"></div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="maxAttendees">Max Attendees</label>
@@ -72,10 +70,9 @@
                                 name="maxAttendees"
                                 th:field="*{maxAttendees}"
                                 placeholder="Max Attendees">
-                        <!--                        <p th:if="${#fields.hasErrors('photoUrl')}" class="text-danger" th:errors="*{photoUrl}"></p>-->
-                    </div>
+                        <div class="alert alert-warning mt-2" th:if="${#fields.hasErrors('maxAttendees')}" th:errors="*{maxAttendees}"></div>                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Edit</button>
+                <button type="submit" class="btn btn-primary mt-2">Edit</button>
             </form>
         </div>
     </section>

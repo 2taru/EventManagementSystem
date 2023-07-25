@@ -1,14 +1,19 @@
 package com.taru.eventmanagement.controllers;
 
 import com.taru.eventmanagement.config.SecurityUtil;
+import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.repositories.EventAttendeeRepository;
 import com.taru.eventmanagement.repositories.EventRepository;
 import com.taru.eventmanagement.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UserController {
@@ -41,5 +46,30 @@ public class UserController {
         model.addAttribute("user", user);
 
         return "user-details";
+    }
+
+    @GetMapping("/user/{userId}/edit")
+    public String updateUserForm(@PathVariable("userId") int userId, Model model) {
+
+        UserDTO user = userService.getUserById(userId);
+
+        model.addAttribute("user", user);
+
+        return "user-edit";
+    }
+
+    @PostMapping("/user/{userId}/edit")
+    public String editUser(@PathVariable("userId") int userId, @Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+
+            model.addAttribute("user", user);
+            return "user-edit";
+        }
+
+        user.setUserId(userId);
+        UserDTO updatedUser = userService.updateUserById(userId, user);
+
+        return "redirect:/user/%s?success".formatted(updatedUser.getUsername());
     }
 }
