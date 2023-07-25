@@ -20,5 +20,5 @@ public interface EventAttendeeService {
 
     List<EventAttendeeDTO> getAllEventAttendeesByEventId(int eventId);
 
-    void deleteEventAttendeeById(EventAttendeeId eventAttendeeId);
+    void deleteEventAttendeeByEventId(int eventId);
 }

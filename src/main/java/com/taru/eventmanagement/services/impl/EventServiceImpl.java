@@ -110,7 +110,7 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new MyNotFoundException("User with username = " + sessionUser.getUserId() + " - not found!"));
 
         if (sessionUser.getUserId() != event.getCreator().getUserId() && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")){
-            throw new AccessDeniedException("Access denied!\nYou do not have rights to delete Events that you did not create.");
+            throw new AccessDeniedException("You do not have rights to delete Events that you did not create.");
         }
 
         eventRepository.deleteById(eventId);

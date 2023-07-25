@@ -8,12 +8,12 @@ import com.taru.eventmanagement.exception.AccessDeniedException;
 import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.mappers.EventAttendeeMapper;
 import com.taru.eventmanagement.mappers.EventMapper;
-import com.taru.eventmanagement.mappers.UserMapper;
 import com.taru.eventmanagement.models.*;
 import com.taru.eventmanagement.repositories.EventAttendeeRepository;
 import com.taru.eventmanagement.repositories.EventRepository;
-import com.taru.eventmanagement.repositories.UserRepository;
 import com.taru.eventmanagement.services.EventAttendeeService;
+import com.taru.eventmanagement.services.EventService;
+import com.taru.eventmanagement.services.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,12 +22,14 @@ import java.util.List;
 public class EventAttendeeServiceImpl implements EventAttendeeService {
 
     private final EventAttendeeRepository eventAttendeeRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
+    private final EventService eventService;
     private final EventRepository eventRepository;
 
-    public EventAttendeeServiceImpl(EventAttendeeRepository eventAttendeeRepository, UserRepository userRepository, EventRepository eventRepository) {
+    public EventAttendeeServiceImpl(EventAttendeeRepository eventAttendeeRepository, UserService userService, EventService eventService, EventRepository eventRepository) {
         this.eventAttendeeRepository = eventAttendeeRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
+        this.eventService = eventService;
         this.eventRepository = eventRepository;
     }
 
@@ -35,22 +37,25 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     public EventAttendeeDTO createEventAttendee(int eventId, EventAttendeeDTO eventAttendeeDTO) {
 
         String username = SecurityUtil.getSessionUser();
-        User sessionUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new MyNotFoundException("User with username = " + username + " - not found!"));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new MyNotFoundException("Event with id = " + eventId + " - not found!"));
+        UserDTO sessionUser = userService.getUserByUsername(username);
+        EventDTO event = eventService.getEventById(eventId);
 
         if (sessionUser.getUserId() == event.getCreator().getUserId()){
-            throw new AccessDeniedException("Access denied!\nYou can't attend to Event that you create.");
+            throw new AccessDeniedException("You can't attend to Event that you create.");
+        }
+        if (event.getCurrentAttendees() + 1 > event.getMaxAttendees()) {
+            throw new AccessDeniedException("You can't attend to this Event! It already have maximum attendees.");
         }
 
-        eventAttendeeDTO.setAttendee(UserMapper.mapToDto(sessionUser));
-        eventAttendeeDTO.setEvent(EventMapper.mapToDto(event));
+        eventAttendeeDTO.setAttendee(sessionUser);
+        eventAttendeeDTO.setEvent(event);
 
         EventAttendee eventAttendee = EventAttendeeMapper.mapToEntity(eventAttendeeDTO);
 
         eventAttendee.setId(new EventAttendeeId(event.getEventId(), sessionUser.getUserId()));
         EventAttendee updatedEventAttendee = eventAttendeeRepository.save(eventAttendee);
+        event.setCurrentAttendees(event.getCurrentAttendees() + 1);
+        eventRepository.save(EventMapper.mapToEntity(event));
 
         return EventAttendeeMapper.mapToDto(updatedEventAttendee);
     }
@@ -108,8 +113,16 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     }
 
     @Override
-    public void deleteEventAttendeeById(EventAttendeeId eventAttendeeId) {
+    public void deleteEventAttendeeByEventId(int eventId) {
 
-        eventAttendeeRepository.deleteById(eventAttendeeId);
+        String username = SecurityUtil.getSessionUser();
+        UserDTO userDTO = userService.getUserByUsername(username);
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new MyNotFoundException("Event with id = " + eventId + " - not found!"));
+
+        eventAttendeeRepository.deleteById(new EventAttendeeId(eventId, userDTO.getUserId()));
+
+        event.setCurrentAttendees(event.getCurrentAttendees() - 1);
+        eventRepository.save(event);
     }
 }

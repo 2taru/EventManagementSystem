@@ -1,9 +1,6 @@
 package com.taru.eventmanagement.controllers;
 
-import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventAttendeeDTO;
-import com.taru.eventmanagement.dto.UserDTO;
-import com.taru.eventmanagement.models.EventAttendeeId;
 import com.taru.eventmanagement.services.EventAttendeeService;
 import com.taru.eventmanagement.services.UserService;
 import org.springframework.stereotype.Controller;
@@ -41,10 +38,7 @@ public class EventAttendeeController {
             Model model)
     {
 
-        String username = SecurityUtil.getSessionUser();
-        UserDTO userDTO = userService.getUserByUsername(username);
-
-        eventAttendeeService.deleteEventAttendeeById(new EventAttendeeId(eventId, userDTO.getUserId()));
+        eventAttendeeService.deleteEventAttendeeByEventId(eventId);
 
         model.addAttribute("isAttended", false);
 

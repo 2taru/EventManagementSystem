@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new MyNotFoundException("User with username = " + sessionUser.getUserId() + " - not found!"));
 
         if (sessionUser.getUserId() != userId && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")){
-            throw new AccessDeniedException("Access denied!\nYou don't have rights to delete other Users.");
+            throw new AccessDeniedException("You don't have rights to delete other Users.");
         }
 
         UserRole userRole = userRoleRepository.findByUserUserId(userId)

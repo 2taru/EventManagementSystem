@@ -45,23 +45,8 @@
                             <p class="card-text" th:text="${event.description}"></p>
                         </div>
                     </div>
-                    <!-- Nested row for non-featured blog posts-->
-<!--                    <div class="row">-->
-<!--                        <div class="col-lg-6">-->
-<!--                            &lt;!&ndash; Blog post&ndash;&gt;-->
-<!--                            <div th:each="event :${club.events}" class="card mb-4">-->
-<!--                                <a href="#!"><img class="card-img-top" th:src="${event.photoUrl}" alt="..." /></a>-->
-<!--                                <div class="card-body">-->
-<!--                                    <div class="small text-muted">January 1, 2022</div>-->
-<!--                                    <h2 th:text="${event.name}"class="card-title h4"></h2>-->
-<!--                                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.</p>-->
-<!--                                    <a class="btn btn-primary" th:href="@{/events/{eventId}(eventId=${event.id})}">More</a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            &lt;!&ndash; Blog post&ndash;&gt;-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
+
                 <!-- Side widgets-->
                 <div class="col-lg-4">
                     <!-- Creator widget-->
@@ -82,7 +67,10 @@
                             <a th:if="${user.userId} == ${event.creator.userId}" class="btn btn-primary m-2 flex-fill" th:href="@{/event/{id}/edit(id=${event.eventId})}">Edit</a>
                             <a th:if="${user.userId} == ${event.creator.userId}" class="btn btn-danger m-2 flex-fill" th:href="@{/event/{id}/delete(id=${event.eventId})}">Delete</a>
                             <div th:if="${user.userId} != ${event.creator.userId}" class="flex-fill d-flex">
-                                <a th:if="not ${isAttended}" class="btn btn-success m-2 flex-fill" th:href="@{/event/{id}/attend(id=${event.eventId})}">Attend to this Event</a>
+                                <div th:if="not ${isAttended}" class="flex-fill d-flex">
+                                    <a th:if="${event.currentAttendees} != ${event.maxAttendees}" class="btn btn-success m-2 flex-fill" th:href="@{/event/{id}/attend(id=${event.eventId})}">Attend to this Event</a>
+                                    <a th:if="${event.currentAttendees} == ${event.maxAttendees}" class="btn btn-secondary m-2 flex-fill disabled">Attend to this Event</a>
+                                </div>
                                 <a th:if="${isAttended}" class="btn btn-warning m-2 flex-fill" th:href="@{/event/{id}/skip(id=${event.eventId})}">Skip this Event</a>
                             </div>
                         </div>
