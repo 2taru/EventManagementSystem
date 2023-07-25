@@ -3,14 +3,13 @@ package com.taru.eventmanagement.services.impl;
 import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventAttendeeDTO;
 import com.taru.eventmanagement.dto.EventDTO;
+import com.taru.eventmanagement.dto.UserDTO;
+import com.taru.eventmanagement.exception.AccessDeniedException;
 import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.mappers.EventAttendeeMapper;
 import com.taru.eventmanagement.mappers.EventMapper;
 import com.taru.eventmanagement.mappers.UserMapper;
-import com.taru.eventmanagement.models.Event;
-import com.taru.eventmanagement.models.EventAttendee;
-import com.taru.eventmanagement.models.EventAttendeeId;
-import com.taru.eventmanagement.models.User;
+import com.taru.eventmanagement.models.*;
 import com.taru.eventmanagement.repositories.EventAttendeeRepository;
 import com.taru.eventmanagement.repositories.EventRepository;
 import com.taru.eventmanagement.repositories.UserRepository;
@@ -36,17 +35,21 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     public EventAttendeeDTO createEventAttendee(int eventId, EventAttendeeDTO eventAttendeeDTO) {
 
         String username = SecurityUtil.getSessionUser();
-        User user = userRepository.findByUsername(username)
+        User sessionUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new MyNotFoundException("User with username = " + username + " - not found!"));
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new MyNotFoundException("Event with id = " + eventId + " - not found!"));
 
-        eventAttendeeDTO.setAttendee(UserMapper.mapToDto(user));
+        if (sessionUser.getUserId() == event.getCreator().getUserId()){
+            throw new AccessDeniedException("Access denied!\nYou can't attend to Event that you create.");
+        }
+
+        eventAttendeeDTO.setAttendee(UserMapper.mapToDto(sessionUser));
         eventAttendeeDTO.setEvent(EventMapper.mapToDto(event));
 
         EventAttendee eventAttendee = EventAttendeeMapper.mapToEntity(eventAttendeeDTO);
 
-        eventAttendee.setId(new EventAttendeeId(event.getEventId(), user.getUserId()));
+        eventAttendee.setId(new EventAttendeeId(event.getEventId(), sessionUser.getUserId()));
         EventAttendee updatedEventAttendee = eventAttendeeRepository.save(eventAttendee);
 
         return EventAttendeeMapper.mapToDto(updatedEventAttendee);

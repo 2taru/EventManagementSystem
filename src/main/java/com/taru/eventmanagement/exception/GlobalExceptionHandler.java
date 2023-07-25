@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
 
         ErrorObject errorObject = new ErrorObject();
 
-        errorObject.setStatusCode(HttpStatus.FORBIDDEN.value() + " - Not found!");
+        errorObject.setStatusCode(HttpStatus.FORBIDDEN.value() + " - Access denied!");
         errorObject.setMessage(ex.getMessage());
         errorObject.setTimestamp(new Date());
 

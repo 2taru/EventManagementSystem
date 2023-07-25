@@ -3,8 +3,12 @@ package com.taru.eventmanagement.controllers;
 import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.dto.UserDTO;
+import com.taru.eventmanagement.exception.AccessDeniedException;
+import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.models.EventAttendeeId;
+import com.taru.eventmanagement.models.UserRole;
 import com.taru.eventmanagement.repositories.EventAttendeeRepository;
+import com.taru.eventmanagement.repositories.UserRoleRepository;
 import com.taru.eventmanagement.services.EventAttendeeService;
 import com.taru.eventmanagement.services.EventService;
 import com.taru.eventmanagement.services.UserService;
@@ -23,12 +27,14 @@ public class EventController {
     private final UserService userService;
     private final EventAttendeeService eventAttendeeService;
     private final EventAttendeeRepository eventAttendeeRepository;
+    private final UserRoleRepository userRoleRepository;
 
-    public EventController(EventService eventService, UserService userService, EventAttendeeService eventAttendeeService, EventAttendeeRepository eventAttendeeRepository) {
+    public EventController(EventService eventService, UserService userService, EventAttendeeService eventAttendeeService, EventAttendeeRepository eventAttendeeRepository, UserRoleRepository userRoleRepository) {
         this.eventService = eventService;
         this.userService = userService;
         this.eventAttendeeService = eventAttendeeService;
         this.eventAttendeeRepository = eventAttendeeRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @GetMapping("/event")
@@ -97,6 +103,15 @@ public class EventController {
 
         EventDTO event = eventService.getEventById(eventId);
 
+        String sessionUsername = SecurityUtil.getSessionUser();
+        UserDTO sessionUser = userService.getUserByUsername(sessionUsername);
+        UserRole sessionUserRole = userRoleRepository.findByUserUserId(sessionUser.getUserId())
+                .orElseThrow(() -> new MyNotFoundException("User with username = " + sessionUser.getUserId() + " - not found!"));
+
+        if (sessionUser.getUserId() != event.getCreator().getUserId() && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")){
+            throw new AccessDeniedException("Access denied!\nYou do not have rights to edit Events that you did not create.");
+        }
+
         model.addAttribute("event", event);
         return "event-edit";
     }
@@ -142,6 +157,6 @@ public class EventController {
 
         eventService.deleteEventById(eventId);
 
-        return "redirect:/event";
+        return "redirect:/event?success";
     }
 }

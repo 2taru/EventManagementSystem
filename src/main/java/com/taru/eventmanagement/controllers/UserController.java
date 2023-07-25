@@ -1,10 +1,13 @@
 package com.taru.eventmanagement.controllers;
 
 import com.taru.eventmanagement.config.SecurityUtil;
-import com.taru.eventmanagement.dto.EventDTO;
 import com.taru.eventmanagement.dto.UserDTO;
+import com.taru.eventmanagement.exception.AccessDeniedException;
+import com.taru.eventmanagement.exception.MyNotFoundException;
+import com.taru.eventmanagement.models.UserRole;
 import com.taru.eventmanagement.repositories.EventAttendeeRepository;
 import com.taru.eventmanagement.repositories.EventRepository;
+import com.taru.eventmanagement.repositories.UserRoleRepository;
 import com.taru.eventmanagement.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -21,11 +24,13 @@ public class UserController {
     private final UserService userService;
     private final EventRepository eventRepository;
     private final EventAttendeeRepository eventAttendeeRepository;
+    private final UserRoleRepository userRoleRepository;
 
-    public UserController(UserService userService, EventRepository eventRepository, EventAttendeeRepository eventAttendeeRepository) {
+    public UserController(UserService userService, EventRepository eventRepository, EventAttendeeRepository eventAttendeeRepository, UserRoleRepository userRoleRepository) {
         this.userService = userService;
         this.eventRepository = eventRepository;
         this.eventAttendeeRepository = eventAttendeeRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @GetMapping("/user/{username}")
@@ -50,6 +55,15 @@ public class UserController {
 
     @GetMapping("/user/{userId}/edit")
     public String updateUserForm(@PathVariable("userId") int userId, Model model) {
+
+        String sessionUsername = SecurityUtil.getSessionUser();
+        UserDTO sessionUserDTO = userService.getUserByUsername(sessionUsername);
+        UserRole sessionUserRole = userRoleRepository.findByUserUserId(sessionUserDTO.getUserId())
+                .orElseThrow(() -> new MyNotFoundException("User with username = " + sessionUserDTO.getUserId() + " - not found!"));
+
+        if (sessionUserDTO.getUserId() != userId && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")){
+            throw new AccessDeniedException("Access denied!\nYou don't have rights to edit other Users.");
+        }
 
         UserDTO user = userService.getUserById(userId);
 

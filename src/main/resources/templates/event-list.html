@@ -17,6 +17,9 @@
     <!-- Page Content-->
     <section class="py-2">
         <div class="container px-3 my-5">
+            <div th:if="${param.success}" class="alert alert-success">
+                Success!
+            </div>
             <div class="text-center mb-3">
                 <h1 class="fw-bolder">Find your Event</h1>
             </div>

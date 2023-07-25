@@ -1,5 +1,6 @@
 package com.taru.eventmanagement.services.impl;
 
+import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.exception.AccessDeniedException;
 import com.taru.eventmanagement.exception.MyNotFoundException;
@@ -132,6 +133,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(int userId) {
+
+        String sessionUsername = SecurityUtil.getSessionUser();
+        User sessionUser = userRepository.findByUsername(sessionUsername)
+                .orElseThrow(() -> new MyNotFoundException("User with username = " + sessionUsername + " - not found!"));
+        UserRole sessionUserRole = userRoleRepository.findByUserUserId(sessionUser.getUserId())
+                .orElseThrow(() -> new MyNotFoundException("User with username = " + sessionUser.getUserId() + " - not found!"));
+
+        if (sessionUser.getUserId() != userId && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")){
+            throw new AccessDeniedException("Access denied!\nYou don't have rights to delete other Users.");
+        }
 
         UserRole userRole = userRoleRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User with id = " + userId + " - does not have a role!"));

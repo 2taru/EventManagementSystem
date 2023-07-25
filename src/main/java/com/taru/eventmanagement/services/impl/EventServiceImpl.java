@@ -2,10 +2,14 @@ package com.taru.eventmanagement.services.impl;
 
 import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventDTO;
+import com.taru.eventmanagement.dto.UserDTO;
+import com.taru.eventmanagement.exception.AccessDeniedException;
 import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.mappers.EventMapper;
 import com.taru.eventmanagement.models.Event;
+import com.taru.eventmanagement.models.UserRole;
 import com.taru.eventmanagement.repositories.EventRepository;
+import com.taru.eventmanagement.repositories.UserRoleRepository;
 import com.taru.eventmanagement.services.EventService;
 import com.taru.eventmanagement.services.UserService;
 import org.springframework.stereotype.Service;
@@ -16,10 +20,12 @@ import java.util.List;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final UserRoleRepository userRoleRepository;
     private final UserService userService;
 
-    public EventServiceImpl(EventRepository eventRepository, UserService userService) {
+    public EventServiceImpl(EventRepository eventRepository, UserRoleRepository userRoleRepository, UserService userService) {
         this.eventRepository = eventRepository;
+        this.userRoleRepository = userRoleRepository;
         this.userService = userService;
     }
 
@@ -94,6 +100,18 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void deleteEventById(int eventId) {
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new MyNotFoundException("Event with id = " + eventId + " - not found!"));
+
+        String sessionUsername = SecurityUtil.getSessionUser();
+        UserDTO sessionUser = userService.getUserByUsername(sessionUsername);
+        UserRole sessionUserRole = userRoleRepository.findByUserUserId(sessionUser.getUserId())
+                .orElseThrow(() -> new MyNotFoundException("User with username = " + sessionUser.getUserId() + " - not found!"));
+
+        if (sessionUser.getUserId() != event.getCreator().getUserId() && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")){
+            throw new AccessDeniedException("Access denied!\nYou do not have rights to delete Events that you did not create.");
+        }
 
         eventRepository.deleteById(eventId);
     }
