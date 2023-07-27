@@ -117,7 +117,12 @@ public class EventController {
     }
 
     @PostMapping("/event/{eventId}/edit")
-    public String editEvent(@PathVariable("eventId") int eventId, @Valid @ModelAttribute("event") EventDTO event, BindingResult bindingResult, Model model) {
+    public String editEvent(
+            @PathVariable("eventId") int eventId,
+            @Valid @ModelAttribute("event") EventDTO event,
+            BindingResult bindingResult,
+            Model model
+    ) {
 
         if (bindingResult.hasErrors()) {
 
@@ -127,6 +132,17 @@ public class EventController {
 
         event.setEventId(eventId);
         eventService.updateEventById(eventId, event);
+
+        return "redirect:/event/%d?success".formatted(eventId);
+    }
+
+    @GetMapping("/event/{eventId}/cancel")
+    public String cancelEvent(
+            @PathVariable("eventId") int eventId,
+            @RequestParam(value = "cancel") boolean cancel
+    ) {
+
+        eventService.changeStatus(eventId, cancel);
 
         return "redirect:/event/%d?success".formatted(eventId);
     }

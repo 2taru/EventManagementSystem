@@ -29,7 +29,9 @@
                 <div class="col-lg-8">
                     <!-- Event Details-->
                     <div class="card mb-4">
-<!--                        <a href="#!"><img class="card-img-top" th:src="${event.photoUrl}" alt="..." /></a>-->
+                        <div th:if="${event.isCancelled}" class="alert alert-warning mx-4 mt-3">
+                            This Event is Canceled!
+                        </div>
                         <img class="card-img-top w-auto mx-4 my-3" th:if="${event.photoUrl != null}" th:src="${event.photoUrl}" />
                         <img class="card-img-top w-50 mx-auto" th:if="${#strings.isEmpty(event.photoUrl)}" src="https://th.bing.com/th/id/R.bc37f4dfb38a528d07d37c1e471756b8?rik=HGzkv4tavCSpzA&pid=ImgRaw&r=0" />
 
@@ -68,11 +70,15 @@
                             <a th:if="${user.userId} == ${event.creator.userId}" class="btn btn-danger m-2 flex-fill" th:href="@{/event/{id}/delete(id=${event.eventId})}">Delete</a>
                             <div th:if="${user.userId} != ${event.creator.userId}" class="flex-fill d-flex">
                                 <div th:if="not ${isAttended}" class="flex-fill d-flex">
-                                    <a th:if="${event.currentAttendees} != ${event.maxAttendees}" class="btn btn-success m-2 flex-fill" th:href="@{/event/{id}/attend(id=${event.eventId})}">Attend to this Event</a>
-                                    <a th:if="${event.currentAttendees} == ${event.maxAttendees}" class="btn btn-secondary m-2 flex-fill disabled">Attend to this Event</a>
+                                    <a th:if="${event.currentAttendees} != ${event.maxAttendees} and not ${event.isCancelled}" class="btn btn-success m-2 flex-fill" th:href="@{/event/{id}/attend(id=${event.eventId})}">Attend to this Event</a>
+                                    <a th:if="${event.currentAttendees} == ${event.maxAttendees} or ${event.isCancelled}" class="btn btn-secondary m-2 flex-fill disabled">Attend to this Event</a>
                                 </div>
                                 <a th:if="${isAttended}" class="btn btn-warning m-2 flex-fill" th:href="@{/event/{id}/skip(id=${event.eventId})}">Skip this Event</a>
                             </div>
+                        </div>
+                        <div th:if="${user.userId} == ${event.creator.userId}" class="flex-fill d-flex">
+                            <a th:if="${event.isCancelled}" class="btn btn-secondary m-2 flex-fill" th:href="@{/event/{id}/cancel?cancel=false(id=${event.eventId})}">Back to active</a>
+                            <a th:if="not ${event.isCancelled}" class="btn btn-warning m-2 flex-fill" th:href="@{/event/{id}/cancel?cancel=true(id=${event.eventId})}">Cancel this Event</a>
                         </div>
                     </div>
                     <!-- Search widget-->

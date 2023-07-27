@@ -10,6 +10,8 @@ public interface EventService {
 
     EventDTO updateEventById(int eventId, EventDTO eventDTO);
 
+    void changeStatus(int eventId, boolean isCanceled);
+
     EventDTO getEventById(int eventId);
 
     List<EventDTO> getAllEvents();

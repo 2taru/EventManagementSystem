@@ -73,7 +73,12 @@ public class UserController {
     }
 
     @PostMapping("/user/{userId}/edit")
-    public String editUser(@PathVariable("userId") int userId, @Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
+    public String editUser(
+            @PathVariable("userId") int userId,
+            @Valid @ModelAttribute("user") UserDTO user,
+            BindingResult bindingResult,
+            Model model
+    ) {
 
         if (bindingResult.hasErrors()) {
 

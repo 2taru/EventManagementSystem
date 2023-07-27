@@ -60,6 +60,17 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public void changeStatus(int eventId, boolean isCanceled) {
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new MyNotFoundException("Event with id = " + eventId + " - not found!"));
+
+        event.setCancelled(isCanceled);
+
+        eventRepository.save(event);
+    }
+
+    @Override
     public EventDTO getEventById(int eventId) {
 
         Event event = eventRepository.findById(eventId)
