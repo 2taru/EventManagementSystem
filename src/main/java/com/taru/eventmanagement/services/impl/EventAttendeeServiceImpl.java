@@ -3,17 +3,23 @@ package com.taru.eventmanagement.services.impl;
 import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventAttendeeDTO;
 import com.taru.eventmanagement.dto.EventDTO;
+import com.taru.eventmanagement.dto.EventResponse;
 import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.exception.AccessDeniedException;
 import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.mappers.EventAttendeeMapper;
 import com.taru.eventmanagement.mappers.EventMapper;
-import com.taru.eventmanagement.models.*;
+import com.taru.eventmanagement.models.Event;
+import com.taru.eventmanagement.models.EventAttendee;
+import com.taru.eventmanagement.models.EventAttendeeId;
 import com.taru.eventmanagement.repositories.EventAttendeeRepository;
 import com.taru.eventmanagement.repositories.EventRepository;
 import com.taru.eventmanagement.services.EventAttendeeService;
 import com.taru.eventmanagement.services.EventService;
 import com.taru.eventmanagement.services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +46,7 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
         UserDTO sessionUser = userService.getUserByUsername(username);
         EventDTO event = eventService.getEventById(eventId);
 
-        if (sessionUser.getUserId() == event.getCreator().getUserId()){
+        if (sessionUser.getUserId() == event.getCreator().getUserId()) {
             throw new AccessDeniedException("You can't attend to Event that you create.");
         }
         if (event.getCurrentAttendees() + 1 > event.getMaxAttendees()) {
@@ -82,24 +88,33 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
         return EventAttendeeMapper.mapToDto(eventAttendee);
     }
 
+//    @Override
+//    public List<EventAttendeeDTO> getAllEventAttendeesByAttendeeId(int attendeeId) {
+//
+//        List<EventAttendee> eventAttendees = eventAttendeeRepository.findByAttendeeUserId(attendeeId);
+//
+//        return eventAttendees.stream()
+//                .map(EventAttendeeMapper::mapToDto)
+//                .toList();
+//    }
+
     @Override
-    public List<EventAttendeeDTO> getAllEventAttendeesByAttendeeId(int attendeeId) {
+    public EventResponse getAllEventsByAttendeeId(int attendeeId, int pageNo, int pageSize, String sortBy, String sortType) {
 
-        List<EventAttendee> eventAttendees = eventAttendeeRepository.findByAttendeeUserId(attendeeId);
+        Page<EventAttendee> eventAttendees = eventAttendeeRepository.findByAttendeeUserId(
+                attendeeId,
+                PageRequest.of(pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy))
+        );
+        List<EventDTO> content = eventAttendees.getContent().stream().map(ea -> EventMapper.mapToDto(ea.getEvent())).toList();
 
-        return eventAttendees.stream()
-                .map(EventAttendeeMapper::mapToDto)
-                .toList();
-    }
-
-    @Override
-    public List<EventDTO> getAllEventsByAttendeeId(int attendeeId) {
-
-        List<EventAttendee> eventAttendees = eventAttendeeRepository.findByAttendeeUserId(attendeeId);
-
-        return eventAttendees.stream()
-                .map(ea -> EventMapper.mapToDto(ea.getEvent()))
-                .toList();
+        return EventResponse.builder()
+                .content(content)
+                .pageNo(eventAttendees.getNumber())
+                .pageSize(eventAttendees.getSize())
+                .totalElements(eventAttendees.getTotalElements())
+                .totalPages(eventAttendees.getTotalPages())
+                .last(eventAttendees.isLast())
+                .build();
     }
 
     @Override

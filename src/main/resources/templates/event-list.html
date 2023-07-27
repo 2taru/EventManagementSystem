@@ -16,7 +16,7 @@
 
     <!-- Page Content-->
     <section class="py-2">
-        <div class="container px-3 my-5">
+        <div class="container px-3 mt-5 mb-3">
             <div th:if="${param.success}" class="alert alert-success">
                 Success!
             </div>
@@ -28,7 +28,7 @@
                 <button class="btn btn-primary" id="button-search" type="submit">Search</button>
             </form>
             <div class="row gx-5">
-                <div th:each="event :${events}" class="card col-lg-6 d-flex align-items-center m-3" style="width: 47.5%;">
+                <div th:each="event :${eventResponse.getContent()}" class="card col-lg-6 d-flex align-items-center m-3" style="width: 47.5%;">
                     <div class="position-relative mt-3">
                         <img class="img-fluid rounded-3 mb-3" th:if="${event.photoUrl != null}" th:src="${event.photoUrl}" />
                         <img class="img-fluid rounded-3 mb-3 w-75" th:if="${#strings.isEmpty(event.photoUrl)}" src="https://th.bing.com/th/id/R.bc37f4dfb38a528d07d37c1e471756b8?rik=HGzkv4tavCSpzA&pid=ImgRaw&r=0" />
@@ -37,6 +37,26 @@
                             <div th:text="'Attendees: ' + ${event.currentAttendees} + '/' + ${event.maxAttendees}"></div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <div th:if="${eventResponse.pageNo != 0}">
+                    <a class="page-link mx-1" th:href="@{/event?pageNo=0}"><<</a>
+                </div>
+                <ul class="pagination" th:each="i : ${#numbers.sequence( 0, eventResponse.totalPages - 1/1)}">
+                    <li th:if="${eventResponse.pageNo == i}" class="page-item mx-1 active">
+                        <a class="page-link" th:text="${i + 1}"></a>
+                    </li>
+                    <li th:if="${eventResponse.pageNo != i}" class="page-item mx-1">
+                        <form th:action="@{/event}">
+                            <button class="page-link" type="submit" th:name="pageNo" th:value="${i}" th:text="${i + 1}"></button>
+                        </form>
+                    </li>
+                </ul>
+                <div th:if="${eventResponse.pageNo != eventResponse.totalPages - 1}">
+                    <form th:action="@{/event}">
+                        <button class="page-link mx-1" type="submit" th:name="pageNo" th:value="${eventResponse.totalPages - 1}" th:text="'>>'"></button>
+                    </form>
                 </div>
             </div>
         </div>

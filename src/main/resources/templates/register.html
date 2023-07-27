@@ -24,7 +24,7 @@
                 <div class="login-form">
                     <form method="post" role="form" th:action="@{/register/save}" th:object="${user}">
                         <div class="form-group mt-2">
-                            <label class="mx-2">Username</label>
+                            <label for="username" class="mx-2">Username</label>
                             <input
                                     id="username"
                                     type="text"
@@ -34,7 +34,7 @@
                         </div>
                         <div class="alert alert-warning mt-2" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                         <div class="form-group mt-2">
-                            <label class="mx-2">Email</label>
+                            <label for="email" class="mx-2">Email</label>
                             <input
                                     id="email"
                                     type="text"
@@ -44,7 +44,7 @@
                         </div>
                         <div class="alert alert-warning mt-2" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                         <div class="form-group mt-2">
-                            <label class="mx-2">Password</label>
+                            <label for="password" class="mx-2">Password</label>
                             <input
                                     id="password"
                                     type="password"

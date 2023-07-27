@@ -77,8 +77,12 @@
                             </div>
                         </div>
                         <div th:if="${user.userId} == ${event.creator.userId}" class="flex-fill d-flex">
-                            <a th:if="${event.isCancelled}" class="btn btn-secondary m-2 flex-fill" th:href="@{/event/{id}/cancel?cancel=false(id=${event.eventId})}">Back to active</a>
-                            <a th:if="not ${event.isCancelled}" class="btn btn-warning m-2 flex-fill" th:href="@{/event/{id}/cancel?cancel=true(id=${event.eventId})}">Cancel this Event</a>
+                            <form class="d-flex flex-fill" th:if="${event.isCancelled}" th:action="@{/event/{id}/cancel(id=${event.eventId})}">
+                                <button class="btn btn-secondary m-2 flex-fill" type="submit" th:name="cancel" th:value="false" th:text="'Back to active'"></button>
+                            </form>
+                            <form class="d-flex flex-fill" th:if="not ${event.isCancelled}" th:action="@{/event/{id}/cancel(id=${event.eventId})}">
+                                <button class="btn btn-warning m-2 flex-fill" type="submit" th:name="cancel" th:value="true" th:text="'Cancel this Event'"></button>
+                            </form>
                         </div>
                     </div>
                     <!-- Search widget-->
@@ -117,7 +121,9 @@
                         <div class="card-body">
                             <!-- Comment form-->
                             <form class="mb-4">
-                                <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                                <label>
+                                    <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                                </label>
                             </form>
                             <!-- Single comment-->
                             <div class="d-flex">

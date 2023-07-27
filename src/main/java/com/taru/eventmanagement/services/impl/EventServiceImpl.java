@@ -2,6 +2,7 @@ package com.taru.eventmanagement.services.impl;
 
 import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventDTO;
+import com.taru.eventmanagement.dto.EventResponse;
 import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.exception.AccessDeniedException;
 import com.taru.eventmanagement.exception.MyNotFoundException;
@@ -12,6 +13,9 @@ import com.taru.eventmanagement.repositories.EventRepository;
 import com.taru.eventmanagement.repositories.UserRoleRepository;
 import com.taru.eventmanagement.services.EventService;
 import com.taru.eventmanagement.services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -80,33 +84,59 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDTO> getAllEvents() {
+    public EventResponse getAllEvents(int pageNo, int pageSize, String sortBy, String sortType) {
 
-        List<Event> events = eventRepository.findAll();
+        Page<Event> events = eventRepository.findAll(
+                PageRequest.of(pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy))
+        );
+        List<EventDTO> content = events.getContent().stream().map(EventMapper::mapToDto).toList();
 
-        return events.stream()
-                .map(EventMapper::mapToDto)
-                .toList();
+        return EventResponse.builder()
+                .content(content)
+                .pageNo(events.getNumber())
+                .pageSize(events.getSize())
+                .totalElements(events.getTotalElements())
+                .totalPages(events.getTotalPages())
+                .last(events.isLast())
+                .build();
     }
 
     @Override
-    public List<EventDTO> getAllEventsByCreatorId(int creatorId) {
+    public EventResponse getAllEventsByCreatorId(int creatorId, int pageNo, int pageSize, String sortBy, String sortType) {
 
-        List<Event> events = eventRepository.findEventByCreatorUserId(creatorId);
+        Page<Event> events = eventRepository.findEventByCreatorUserId(
+                creatorId,
+                PageRequest.of(pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy))
+        );
+        List<EventDTO> content = events.getContent().stream().map(EventMapper::mapToDto).toList();
 
-        return events.stream()
-                .map(EventMapper::mapToDto)
-                .toList();
+        return EventResponse.builder()
+                .content(content)
+                .pageNo(events.getNumber())
+                .pageSize(events.getSize())
+                .totalElements(events.getTotalElements())
+                .totalPages(events.getTotalPages())
+                .last(events.isLast())
+                .build();
     }
 
     @Override
-    public List<EventDTO> searchEvents(String query) {
+    public EventResponse searchEvents(String query, int pageNo, int pageSize, String sortBy, String sortType) {
 
-        List<Event> events = eventRepository.searchEvents(query);
+        Page<Event> events = eventRepository.searchEvents(
+                query,
+                PageRequest.of(pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy))
+        );
+        List<EventDTO> content = events.getContent().stream().map(EventMapper::mapToDto).toList();
 
-        return events.stream()
-                .map(EventMapper::mapToDto)
-                .toList();
+        return EventResponse.builder()
+                .content(content)
+                .pageNo(events.getNumber())
+                .pageSize(events.getSize())
+                .totalElements(events.getTotalElements())
+                .totalPages(events.getTotalPages())
+                .last(events.isLast())
+                .build();
     }
 
     @Override
@@ -120,7 +150,7 @@ public class EventServiceImpl implements EventService {
         UserRole sessionUserRole = userRoleRepository.findByUserUserId(sessionUser.getUserId())
                 .orElseThrow(() -> new MyNotFoundException("User with username = " + sessionUser.getUserId() + " - not found!"));
 
-        if (sessionUser.getUserId() != event.getCreator().getUserId() && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")){
+        if (sessionUser.getUserId() != event.getCreator().getUserId() && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")) {
             throw new AccessDeniedException("You do not have rights to delete Events that you did not create.");
         }
 

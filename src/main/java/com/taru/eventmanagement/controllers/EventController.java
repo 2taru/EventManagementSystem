@@ -2,6 +2,7 @@ package com.taru.eventmanagement.controllers;
 
 import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventDTO;
+import com.taru.eventmanagement.dto.EventResponse;
 import com.taru.eventmanagement.dto.UserDTO;
 import com.taru.eventmanagement.exception.AccessDeniedException;
 import com.taru.eventmanagement.exception.MyNotFoundException;
@@ -17,8 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 public class EventController {
@@ -38,41 +37,68 @@ public class EventController {
     }
 
     @GetMapping("/event")
-    public String listEvents(Model model) {
+    public String listEvents(
+            Model model,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "3", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "creationDate", required = false) String sortBy,
+            @RequestParam(value = "sortType", defaultValue = "ASC", required = false) String sortType
+    ) {
 
-        List<EventDTO> events = eventService.getAllEvents();
+        EventResponse eventResponse = eventService.getAllEvents(pageNo, pageSize, sortBy, sortType);
 
-        model.addAttribute("events", events);
+        model.addAttribute("eventResponse", eventResponse);
 
         return "event-list";
     }
 
     @GetMapping("/user/{userId}/created-events")
-    public String eventListByCreatorId(@PathVariable("userId") int userId, Model model) {
+    public String eventListByCreatorId(
+            @PathVariable("userId") int userId,
+            Model model,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "creationDate", required = false) String sortBy,
+            @RequestParam(value = "sortType", defaultValue = "ASC", required = false) String sortType
+    ) {
 
-        List<EventDTO> events = eventService.getAllEventsByCreatorId(userId);
+        EventResponse eventResponse = eventService.getAllEventsByCreatorId(userId, pageNo, pageSize, sortBy, sortType);
 
-        model.addAttribute("events", events);
+        model.addAttribute("eventResponse", eventResponse);
 
         return "event-list";
     }
 
     @GetMapping("/user/{userId}/attended-events")
-    public String eventListByAttendeeId(@PathVariable("userId") int userId, Model model) {
+    public String eventListByAttendeeId(
+            @PathVariable("userId") int userId,
+            Model model,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "creationDate", required = false) String sortBy,
+            @RequestParam(value = "sortType", defaultValue = "ASC", required = false) String sortType
+    ) {
 
-        List<EventDTO> events = eventAttendeeService.getAllEventsByAttendeeId(userId);
+        EventResponse eventResponse = eventAttendeeService.getAllEventsByAttendeeId(userId, pageNo, pageSize, sortBy, sortType);
 
-        model.addAttribute("events", events);
+        model.addAttribute("eventResponse", eventResponse);
 
         return "event-list";
     }
 
     @GetMapping("/event/search")
-    public String searchClub(@RequestParam(value = "query") String query, Model model) {
+    public String searchClub(
+            @RequestParam(value = "query") String query,
+            Model model,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "creationDate", required = false) String sortBy,
+            @RequestParam(value = "sortType", defaultValue = "ASC", required = false) String sortType
+    ) {
 
-        List<EventDTO> events = eventService.searchEvents(query);
+        EventResponse eventResponse = eventService.searchEvents(query, pageNo, pageSize, sortBy, sortType);
 
-        model.addAttribute("events", events);
+        model.addAttribute("eventResponse", eventResponse);
 
         return "event-list";
     }

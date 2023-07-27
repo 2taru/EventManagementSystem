@@ -1,8 +1,7 @@
 package com.taru.eventmanagement.services;
 
 import com.taru.eventmanagement.dto.EventDTO;
-
-import java.util.List;
+import com.taru.eventmanagement.dto.EventResponse;
 
 public interface EventService {
 
@@ -14,11 +13,11 @@ public interface EventService {
 
     EventDTO getEventById(int eventId);
 
-    List<EventDTO> getAllEvents();
+    EventResponse getAllEvents(int pageNo, int pageSize, String sortBy, String sortType);
 
-    List<EventDTO> getAllEventsByCreatorId(int creatorId);
+    EventResponse getAllEventsByCreatorId(int creatorId, int pageNo, int pageSize, String sortBy, String sortType);
 
-    List<EventDTO> searchEvents(String query);
+    EventResponse searchEvents(String query, int pageNo, int pageSize, String sortBy, String sortType);
 
     void deleteEventById(int eventId);
 }

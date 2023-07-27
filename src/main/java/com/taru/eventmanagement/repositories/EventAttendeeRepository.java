@@ -2,13 +2,15 @@ package com.taru.eventmanagement.repositories;
 
 import com.taru.eventmanagement.models.EventAttendee;
 import com.taru.eventmanagement.models.EventAttendeeId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface EventAttendeeRepository extends JpaRepository<EventAttendee, EventAttendeeId> {
 
-    List<EventAttendee> findByAttendeeUserId(int attendeeId);
+    Page<EventAttendee> findByAttendeeUserId(int attendeeId, Pageable pageable);
     List<EventAttendee> findByEventEventId(int eventId);
     boolean existsById(EventAttendeeId eventAttendeeId);
     int countByAttendeeUserId(int userId);
