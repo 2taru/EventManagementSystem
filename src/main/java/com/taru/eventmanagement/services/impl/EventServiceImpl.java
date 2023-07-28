@@ -37,7 +37,9 @@ public class EventServiceImpl implements EventService {
     public EventDTO createEvent(EventDTO eventDTO) {
 
         eventDTO.setCreator(userService.getUserByUsername(SecurityUtil.getSessionUser()));
-        eventDTO.setDescription(eventDTO.getDescription().isEmpty() || eventDTO.getDescription().isBlank() ? "No description." : eventDTO.getDescription());
+        eventDTO.setDescription(eventDTO.getDescription().isEmpty() || eventDTO.getDescription().isBlank()
+                ? "No description." : eventDTO.getDescription());
+
         Event event = EventMapper.mapToEntity(eventDTO);
 
         event = eventRepository.save(event);
@@ -86,9 +88,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse getAllEvents(int pageNo, int pageSize, String sortBy, String sortType) {
 
-        Page<Event> events = eventRepository.findAll(
-                PageRequest.of(pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy))
-        );
+        Page<Event> events = eventRepository.findAll(PageRequest.of(
+                pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy)));
         List<EventDTO> content = events.getContent().stream().map(EventMapper::mapToDto).toList();
 
         return EventResponse.builder()
@@ -104,10 +105,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse getAllEventsByCreatorId(int creatorId, int pageNo, int pageSize, String sortBy, String sortType) {
 
-        Page<Event> events = eventRepository.findEventByCreatorUserId(
-                creatorId,
-                PageRequest.of(pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy))
-        );
+        Page<Event> events = eventRepository.findEventByCreatorUserId(creatorId, PageRequest.of(
+                pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy)));
         List<EventDTO> content = events.getContent().stream().map(EventMapper::mapToDto).toList();
 
         return EventResponse.builder()
@@ -123,10 +122,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse searchEvents(String query, int pageNo, int pageSize, String sortBy, String sortType) {
 
-        Page<Event> events = eventRepository.searchEvents(
-                query,
-                PageRequest.of(pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy))
-        );
+        Page<Event> events = eventRepository.searchEvents(query, PageRequest.of(
+                pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy)));
         List<EventDTO> content = events.getContent().stream().map(EventMapper::mapToDto).toList();
 
         return EventResponse.builder()

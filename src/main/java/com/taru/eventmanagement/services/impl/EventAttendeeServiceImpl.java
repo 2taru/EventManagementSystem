@@ -32,7 +32,12 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     private final EventService eventService;
     private final EventRepository eventRepository;
 
-    public EventAttendeeServiceImpl(EventAttendeeRepository eventAttendeeRepository, UserService userService, EventService eventService, EventRepository eventRepository) {
+    public EventAttendeeServiceImpl(
+            EventAttendeeRepository eventAttendeeRepository,
+            UserService userService,
+            EventService eventService,
+            EventRepository eventRepository
+    ) {
         this.eventAttendeeRepository = eventAttendeeRepository;
         this.userService = userService;
         this.eventService = eventService;
@@ -101,10 +106,8 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     @Override
     public EventResponse getAllEventsByAttendeeId(int attendeeId, int pageNo, int pageSize, String sortBy, String sortType) {
 
-        Page<EventAttendee> eventAttendees = eventAttendeeRepository.findByAttendeeUserId(
-                attendeeId,
-                PageRequest.of(pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy))
-        );
+        Page<EventAttendee> eventAttendees = eventAttendeeRepository.findByAttendeeUserId(attendeeId, PageRequest.of(
+                pageNo, pageSize, Sort.by(sortType.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy)));
         List<EventDTO> content = eventAttendees.getContent().stream().map(ea -> EventMapper.mapToDto(ea.getEvent())).toList();
 
         return EventResponse.builder()

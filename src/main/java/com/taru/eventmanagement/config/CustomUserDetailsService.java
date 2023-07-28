@@ -1,5 +1,6 @@
 package com.taru.eventmanagement.config;
 
+import com.taru.eventmanagement.exception.MyNotFoundException;
 import com.taru.eventmanagement.models.Role;
 import com.taru.eventmanagement.models.User;
 import com.taru.eventmanagement.models.UserRole;
@@ -32,9 +33,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new /*UserNotFoundException*/RuntimeException("User with username = " + username + " - not found!"));
+                .orElseThrow(() -> new MyNotFoundException("User with username = " + username + " - not found!"));
         UserRole userRole = userRoleRepository.findByUserUserId(user.getUserId())
-                .orElseThrow(() -> new /*RoleNotFoundException*/RuntimeException("User with id = " + user.getUserId() + " - don't have a role!"));
+                .orElseThrow(() -> new MyNotFoundException("User with id = " + user.getUserId() + " - don't have a role!"));
         List<Role> roles = Collections.singletonList(userRole.getRole());
 
         return new org.springframework.security.core.userdetails.User(

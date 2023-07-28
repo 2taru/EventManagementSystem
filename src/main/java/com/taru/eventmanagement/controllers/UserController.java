@@ -26,7 +26,12 @@ public class UserController {
     private final EventAttendeeRepository eventAttendeeRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public UserController(UserService userService, EventRepository eventRepository, EventAttendeeRepository eventAttendeeRepository, UserRoleRepository userRoleRepository) {
+    public UserController(
+            UserService userService,
+            EventRepository eventRepository,
+            EventAttendeeRepository eventAttendeeRepository,
+            UserRoleRepository userRoleRepository
+    ) {
         this.userService = userService;
         this.eventRepository = eventRepository;
         this.eventAttendeeRepository = eventAttendeeRepository;
@@ -50,7 +55,7 @@ public class UserController {
         model.addAttribute("attendedEventsCount", attendedEventsCount);
         model.addAttribute("user", user);
 
-        return "user-details";
+        return "user/user-details";
     }
 
     @GetMapping("/user/{userId}/edit")
@@ -69,7 +74,7 @@ public class UserController {
 
         model.addAttribute("user", user);
 
-        return "user-edit";
+        return "user/user-edit";
     }
 
     @PostMapping("/user/{userId}/edit")
@@ -83,7 +88,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
 
             model.addAttribute("user", user);
-            return "user-edit";
+            return "user/user-edit";
         }
 
         user.setUserId(userId);

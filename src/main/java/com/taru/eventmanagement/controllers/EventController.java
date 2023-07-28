@@ -28,7 +28,13 @@ public class EventController {
     private final EventAttendeeRepository eventAttendeeRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public EventController(EventService eventService, UserService userService, EventAttendeeService eventAttendeeService, EventAttendeeRepository eventAttendeeRepository, UserRoleRepository userRoleRepository) {
+    public EventController(
+            EventService eventService,
+            UserService userService,
+            EventAttendeeService eventAttendeeService,
+            EventAttendeeRepository eventAttendeeRepository,
+            UserRoleRepository userRoleRepository
+    ) {
         this.eventService = eventService;
         this.userService = userService;
         this.eventAttendeeService = eventAttendeeService;
@@ -49,7 +55,7 @@ public class EventController {
 
         model.addAttribute("eventResponse", eventResponse);
 
-        return "event-list";
+        return "event/event-list";
     }
 
     @GetMapping("/user/{userId}/created-events")
@@ -66,7 +72,7 @@ public class EventController {
 
         model.addAttribute("eventResponse", eventResponse);
 
-        return "event-list";
+        return "event/event-list";
     }
 
     @GetMapping("/user/{userId}/attended-events")
@@ -83,7 +89,7 @@ public class EventController {
 
         model.addAttribute("eventResponse", eventResponse);
 
-        return "event-list";
+        return "event/event-list";
     }
 
     @GetMapping("/event/search")
@@ -100,23 +106,27 @@ public class EventController {
 
         model.addAttribute("eventResponse", eventResponse);
 
-        return "event-list";
+        return "event/event-list";
     }
 
     @GetMapping("/event/create")
     public String createEventForm(Model model) {
 
         model.addAttribute("event", new EventDTO());
-        return "event-create";
+        return "event/event-create";
     }
 
     @PostMapping("/event/create")
-    public String createEvent(@Valid @ModelAttribute("event") EventDTO event, BindingResult bindingResult, Model model) {
+    public String createEvent(
+            @Valid @ModelAttribute("event") EventDTO event,
+            BindingResult bindingResult,
+            Model model
+    ) {
 
         if (bindingResult.hasErrors()) {
 
             model.addAttribute("event", event);
-            return "event-create";
+            return "event/event-create";
         }
 
         int eventId = eventService.createEvent(event).getEventId();
@@ -134,12 +144,14 @@ public class EventController {
         UserRole sessionUserRole = userRoleRepository.findByUserUserId(sessionUser.getUserId())
                 .orElseThrow(() -> new MyNotFoundException("User with username = " + sessionUser.getUserId() + " - not found!"));
 
-        if (sessionUser.getUserId() != event.getCreator().getUserId() && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")){
+        if (sessionUser.getUserId() != event.getCreator().getUserId()
+                && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")
+        ){
             throw new AccessDeniedException("Access denied!\nYou do not have rights to edit Events that you did not create.");
         }
 
         model.addAttribute("event", event);
-        return "event-edit";
+        return "event/event-edit";
     }
 
     @PostMapping("/event/{eventId}/edit")
@@ -153,7 +165,7 @@ public class EventController {
         if (bindingResult.hasErrors()) {
 
             model.addAttribute("event", event);
-            return "event-edit";
+            return "event/event-edit";
         }
 
         event.setEventId(eventId);
@@ -191,7 +203,7 @@ public class EventController {
         );
         model.addAttribute("user", user);
 
-        return "event-details";
+        return "event/event-details";
     }
 
     @GetMapping("/event/{eventId}/delete")

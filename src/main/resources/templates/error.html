@@ -6,8 +6,8 @@
         layout:decorate="~{layout}"
 >
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>Event Details</title>
 
 </head>
@@ -20,7 +20,7 @@
             <h1 class="display-4"
                 th:text="${errorObject} == null ? '404 - Page Not Found' : ${errorObject.statusCode}"></h1>
             <p class="lead"
-                th:text="${errorObject} == null ? 'Oops! The page you are looking for does not exist.' : ${errorObject.message}"></p>
+               th:text="${errorObject} == null ? 'Oops! The page you are looking for does not exist.' : ${errorObject.message}"></p>
             <a class="btn btn-primary" th:href="@{/event}">Go back to home</a>
         </div>
     </section>

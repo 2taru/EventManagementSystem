@@ -26,7 +26,7 @@ public class AuthController {
     @GetMapping("/login")
     public String getLoginForm() {
 
-        return "login";
+        return "user/login";
     }
 
     @GetMapping("/register")
@@ -34,7 +34,7 @@ public class AuthController {
 
         model.addAttribute("user", new UserDTO());
 
-        return "register";
+        return "user/register";
     }
 
     @PostMapping("/register/save")
@@ -52,7 +52,7 @@ public class AuthController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", user);
-            return "register";
+            return "user/register";
         }
 
         userService.createUser(user);

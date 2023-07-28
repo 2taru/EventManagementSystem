@@ -26,7 +26,13 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleService userRoleService, RoleService roleService, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            UserRoleService userRoleService,
+            RoleService roleService,
+            UserRoleRepository userRoleRepository,
+            PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
         this.userRoleService = userRoleService;
         this.roleService = roleService;
@@ -140,7 +146,7 @@ public class UserServiceImpl implements UserService {
         UserRole sessionUserRole = userRoleRepository.findByUserUserId(sessionUser.getUserId())
                 .orElseThrow(() -> new MyNotFoundException("User with username = " + sessionUser.getUserId() + " - not found!"));
 
-        if (sessionUser.getUserId() != userId && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")){
+        if (sessionUser.getUserId() != userId && !sessionUserRole.getRole().getName().equals("ROLE_ADMIN")) {
             throw new AccessDeniedException("You don't have rights to delete other Users.");
         }
 
