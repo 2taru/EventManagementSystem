@@ -46,7 +46,7 @@ public class EventController {
     public String listEvents(
             Model model,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "3", required = false) int pageSize,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "creationDate", required = false) String sortBy,
             @RequestParam(value = "sortType", defaultValue = "ASC", required = false) String sortType
     ) {
@@ -81,7 +81,7 @@ public class EventController {
             Model model,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "creationDate", required = false) String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = "registrationDate", required = false) String sortBy,
             @RequestParam(value = "sortType", defaultValue = "ASC", required = false) String sortType
     ) {
 

@@ -44,7 +44,7 @@
                 <div th:if="${eventResponse.pageNo != 0}">
                     <a class="page-link mx-1" th:href="@{/event?pageNo=0}"><<</a>
                 </div>
-                <ul class="pagination" th:each="i : ${#numbers.sequence(T(java.lang.Math).max(0, eventResponse.pageNo - 2), T(java.lang.Math).min(eventResponse.totalPages - 1, eventResponse.pageNo + 3)/1)}">
+                <ul class="pagination" th:each="i : ${#numbers.sequence(T(java.lang.Math).max(0, eventResponse.pageNo == eventResponse.totalPages - 1 ? eventResponse.pageNo - 3 : eventResponse.pageNo - 2), T(java.lang.Math).min(eventResponse.totalPages - 1, eventResponse.pageNo == 0 ? eventResponse.pageNo + 4 : eventResponse.pageNo + 3)/1)}">
                     <li th:if="${eventResponse.pageNo == i}" class="page-item mx-1 active">
                         <a class="page-link" th:text="${i + 1}"></a>
                     </li>
