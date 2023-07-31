@@ -11,6 +11,7 @@ import java.util.List;
 public interface EventAttendeeRepository extends JpaRepository<EventAttendee, EventAttendeeId> {
 
     Page<EventAttendee> findByAttendeeUserId(int attendeeId, Pageable pageable);
+    List<EventAttendee> findByAttendeeUserId(int attendeeId);
     List<EventAttendee> findByEventEventIdAndStatus(int eventId, String status);
     boolean existsById(EventAttendeeId eventAttendeeId);
     int countByAttendeeUserId(int userId);

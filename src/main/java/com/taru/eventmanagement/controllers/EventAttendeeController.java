@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -40,14 +41,21 @@ public class EventAttendeeController {
     @GetMapping("/event/{eventId}/skip")
     public String skipToEvent(
             @PathVariable("eventId") int eventId,
+            @RequestParam(value = "redirect", defaultValue = "event-detail", required = false) String redirect,
             Model model
     ) {
 
         eventAttendeeService.deleteEventAttendeeByEventId(eventId);
 
-        model.addAttribute("isAttended", false);
+        if (redirect.equals("event-detail")) {
+            model.addAttribute("isAttended", false);
+            return "redirect:/event/%d?success".formatted(eventId);
+        } else if (redirect.equals("attended-list")) {
+            UserDTO user = userService.getUserByUsername(SecurityUtil.getSessionUser());
+            return "redirect:/user/%d/attended-list?success".formatted(user.getUserId());
+        }
 
-        return "redirect:/event/%d?success".formatted(eventId);
+        return "redirect:/event";
     }
 
     @GetMapping("/user/{userId}/approving-list")
@@ -58,6 +66,16 @@ public class EventAttendeeController {
         model.addAttribute("eventAttendees", eventAttendees);
 
         return "event/event-attendee-approving-list";
+    }
+
+    @GetMapping("/user/{userId}/attended-list")
+    public String attendedList(@PathVariable("userId") int userId, Model model){
+
+        List<EventAttendeeDTO> eventAttendees = eventAttendeeService.getAllEventAttendeesByAttendeeId(userId);
+
+        model.addAttribute("eventAttendees", eventAttendees);
+
+        return "event/event-attendee-managing-list";
     }
 
     @GetMapping("/event/{eventId}/attendee/{attendeeId}/approve")

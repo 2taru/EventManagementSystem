@@ -94,15 +94,15 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
         return EventAttendeeMapper.mapToDto(eventAttendee);
     }
 
-//    @Override
-//    public List<EventAttendeeDTO> getAllEventAttendeesByAttendeeId(int attendeeId) {
-//
-//        List<EventAttendee> eventAttendees = eventAttendeeRepository.findByAttendeeUserId(attendeeId);
-//
-//        return eventAttendees.stream()
-//                .map(EventAttendeeMapper::mapToDto)
-//                .toList();
-//    }
+    @Override
+    public List<EventAttendeeDTO> getAllEventAttendeesByAttendeeId(int attendeeId) {
+
+        List<EventAttendee> eventAttendees = eventAttendeeRepository.findByAttendeeUserId(attendeeId);
+
+        return eventAttendees.stream()
+                .map(EventAttendeeMapper::mapToDto)
+                .toList();
+    }
 
     @Override
     public EventResponse getAllEventsByAttendeeId(int attendeeId, int pageNo, int pageSize, String sortBy, String sortType) {
