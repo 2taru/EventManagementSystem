@@ -53,9 +53,11 @@
                                    class="text-muted mb-0 text-decoration-none">Attended on</a>
                             </div>
                         </div>
-                        <div th:if="${user.username} == ${#authentication.name}">
-                            <a th:href="@{/user/{userId}/edit(userId=${user.userId})}" class="btn btn-dark mt-2">
+                        <div th:if="${user.username} == ${#authentication.name}" class="mt-2 d-flex justify-content-around">
+                            <a th:href="@{/user/{userId}/edit(userId=${user.userId})}" class="mx-4 w-50 btn btn-dark">
                                 Edit Profile</a>
+                            <a th:href="@{/user/{userId}/approving-list(userId=${user.userId})}" class="mx-4 w-50 btn btn-secondary">
+                                Approving List</a>
                         </div>
                     </div>
                 </div>

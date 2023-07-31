@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -121,9 +122,13 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
     }
 
     @Override
-    public List<EventAttendeeDTO> getAllEventAttendeesByEventId(int eventId) {
+    public List<EventAttendeeDTO> getAllEventAttendeesByEventCreatorId(int userId) {
 
-        List<EventAttendee> eventAttendees = eventAttendeeRepository.findByEventEventId(eventId);
+        List<Event> events = eventRepository.findEventByCreatorUserId(userId);
+
+        List<EventAttendee> eventAttendees = new ArrayList<>();
+
+        events.forEach(e -> eventAttendees.addAll(eventAttendeeRepository.findByEventEventIdAndStatus(e.getEventId(), "Attended")));
 
         return eventAttendees.stream()
                 .map(EventAttendeeMapper::mapToDto)
@@ -142,5 +147,27 @@ public class EventAttendeeServiceImpl implements EventAttendeeService {
 
         event.setCurrentAttendees(event.getCurrentAttendees() - 1);
         eventRepository.save(event);
+    }
+
+    @Override
+    public void approveAttendee(EventAttendeeId eventAttendeeId) {
+
+        EventAttendee eventAttendee = eventAttendeeRepository.findById(eventAttendeeId)
+                .orElseThrow(() -> new MyNotFoundException("EventAttendee with id = " + eventAttendeeId + " - not found!"));
+
+        eventAttendee.setStatus("Approved");
+
+        eventAttendeeRepository.save(eventAttendee);
+    }
+
+    @Override
+    public void disapproveAttendee(EventAttendeeId eventAttendeeId) {
+
+        EventAttendee eventAttendee = eventAttendeeRepository.findById(eventAttendeeId)
+                .orElseThrow(() -> new MyNotFoundException("EventAttendee with id = " + eventAttendeeId + " - not found!"));
+
+        eventAttendee.setStatus("Disapproved");
+
+        eventAttendeeRepository.save(eventAttendee);
     }
 }

@@ -13,6 +13,8 @@ public interface EventAttendeeService {
     EventAttendeeDTO getEventAttendeeById(EventAttendeeId eventAttendeeId);
 //    List<EventAttendeeDTO> getAllEventAttendeesByAttendeeId(int attendeeId);
     EventResponse getAllEventsByAttendeeId(int attendeeId, int pageNo, int pageSize, String sortBy, String sortType);
-    List<EventAttendeeDTO> getAllEventAttendeesByEventId(int eventId);
+    List<EventAttendeeDTO> getAllEventAttendeesByEventCreatorId(int userId);
     void deleteEventAttendeeByEventId(int eventId);
+    void approveAttendee(EventAttendeeId eventAttendeeId);
+    void disapproveAttendee(EventAttendeeId eventAttendeeId);
 }

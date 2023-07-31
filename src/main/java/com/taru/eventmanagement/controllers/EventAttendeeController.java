@@ -1,12 +1,17 @@
 package com.taru.eventmanagement.controllers;
 
+import com.taru.eventmanagement.config.SecurityUtil;
 import com.taru.eventmanagement.dto.EventAttendeeDTO;
+import com.taru.eventmanagement.dto.UserDTO;
+import com.taru.eventmanagement.models.EventAttendeeId;
 import com.taru.eventmanagement.services.EventAttendeeService;
 import com.taru.eventmanagement.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Controller
 public class EventAttendeeController {
@@ -22,8 +27,8 @@ public class EventAttendeeController {
     @GetMapping("/event/{eventId}/attend")
     public String attendToEvent(
             @PathVariable("eventId") int eventId,
-            Model model)
-    {
+            Model model
+    ) {
 
         eventAttendeeService.createEventAttendee(eventId, EventAttendeeDTO.builder().status("Attended").build());
 
@@ -35,13 +40,49 @@ public class EventAttendeeController {
     @GetMapping("/event/{eventId}/skip")
     public String skipToEvent(
             @PathVariable("eventId") int eventId,
-            Model model)
-    {
+            Model model
+    ) {
 
         eventAttendeeService.deleteEventAttendeeByEventId(eventId);
 
         model.addAttribute("isAttended", false);
 
         return "redirect:/event/%d?success".formatted(eventId);
+    }
+
+    @GetMapping("/user/{userId}/approving-list")
+    public String approvingList(@PathVariable("userId") int userId, Model model){
+
+        List<EventAttendeeDTO> eventAttendees = eventAttendeeService.getAllEventAttendeesByEventCreatorId(userId);
+
+        model.addAttribute("eventAttendees", eventAttendees);
+
+        return "event/event-attendee-approving-list";
+    }
+
+    @GetMapping("/event/{eventId}/attendee/{attendeeId}/approve")
+    public String approveAttendee(
+            @PathVariable("eventId") int eventId,
+            @PathVariable("attendeeId") int attendeeId
+    ) {
+
+        eventAttendeeService.approveAttendee(new EventAttendeeId(eventId, attendeeId));
+
+        UserDTO user = userService.getUserByUsername(SecurityUtil.getSessionUser());
+
+        return "redirect:/user/%d/approving-list?success".formatted(user.getUserId());
+    }
+
+    @GetMapping("/event/{eventId}/attendee/{attendeeId}/disapprove")
+    public String disapproveAttendee(
+            @PathVariable("eventId") int eventId,
+            @PathVariable("attendeeId") int attendeeId
+    ) {
+
+        eventAttendeeService.disapproveAttendee(new EventAttendeeId(eventId, attendeeId));
+
+        UserDTO user = userService.getUserByUsername(SecurityUtil.getSessionUser());
+
+        return "redirect:/user/%d/approving-list?success".formatted(user.getUserId());
     }
 }
