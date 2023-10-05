@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Event Details</title>
+
+</head>
+<body layout:fragment="body" class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+
+    <!-- Page Content-->
+    <section >
+        <div class="container">
+            <div class="row">
+                <div class="container">
+                    <div class="my-5 mx-5">
+                        <div th:if="${param.success}" class="alert alert-success">
+                            Success!
+                        </div>
+                        <h1 class="fw-bolder text-break" th:text="${event.name}"></h1>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <!-- Event Details-->
+                    <div class="card mb-4">
+                        <div th:if="${event.isCancelled}" class="alert alert-warning mx-4 mt-3">
+                            This Event is Canceled!
+                        </div>
+                        <img class="card-img-top" th:if="${event.photoUrl != null}" th:src="${event.photoUrl}" />
+                        <img class="card-img-top" th:if="${#strings.isEmpty(event.photoUrl)}" src="https://dummyimage.com/600x350/6c757d/343a40" />
+
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2 class="card-title">About this Event</h2>
+                                <div>
+                                    <div class="small text-muted" th:text="'Event date: ' + ${event.dateTime.toLocalDate()} + ' : ' + ${event.dateTime.toLocalTime()}"></div>
+                                    <div class="small text-muted" th:text="'Attendees: ' + ${event.currentAttendees} + '/' + ${event.maxAttendees}"></div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <p class="card-text" th:text="${event.description}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side widgets-->
+                <div class="col-lg-4">
+                    <!-- Creator widget-->
+                    <div class="card mb-4">
+                        <div class="card-body d-flex justify-content-start align-items-center">
+                            <img th:if="${event.creator.photoUrl} == null" src="https://th.bing.com/th/id/OIP.YCGQ25lthu82-vALQSw9gwHaHa?pid=ImgDet&rs=1"
+                                     class="rounded-circle card-text" style="width: 15%;" />
+                            <img th:if="${event.creator.photoUrl} != null" th:src="${event.creator.photoUrl}"
+                                     class="rounded-circle card-text" style="width: 15%;" />
+                            <a class="card-text mx-2 h4 text-decoration-none text-dark" th:href="@{/user/{username}(username=${event.creator.username})}" th:text="'@' + ${event.creator.username}"></a>
+                        </div>
+                        <div class="card-body small text-muted" th:text="'Creation date: ' + ${event.creationDate.toLocalDate()}"></div>
+                    </div>
+                    <!-- Action buttons widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Actions</div>
+                        <div class="d-flex justify-content-around align-items-center">
+                            <a th:if="${user.userId} == ${event.creator.userId}" class="btn btn-primary m-2 flex-fill" th:href="@{/event/{id}/edit(id=${event.eventId})}">Edit</a>
+                            <a th:if="${user.userId} == ${event.creator.userId}" class="btn btn-danger m-2 flex-fill" th:href="@{/event/{id}/delete(id=${event.eventId})}">Delete</a>
+                            <div th:if="${user.userId} != ${event.creator.userId}" class="flex-fill d-flex">
+                                <div th:if="not ${isAttended}" class="flex-fill d-flex">
+                                    <a th:if="${event.currentAttendees} != ${event.maxAttendees} and not ${event.isCancelled}" class="btn btn-success m-2 flex-fill" th:href="@{/event/{id}/attend(id=${event.eventId})}">Attend to this Event</a>
+                                    <a th:if="${event.currentAttendees} == ${event.maxAttendees} or ${event.isCancelled}" class="btn btn-secondary m-2 flex-fill disabled">Attend to this Event</a>
+                                </div>
+                                <a th:if="${isAttended}" class="btn btn-warning m-2 flex-fill" th:href="@{/event/{id}/skip(id=${event.eventId})}">Skip this Event</a>
+                            </div>
+                        </div>
+                        <div th:if="${user.userId} == ${event.creator.userId}" class="flex-fill d-flex">
+                            <form class="d-flex flex-fill" th:if="${event.isCancelled}" th:action="@{/event/{id}/cancel(id=${event.eventId})}">
+                                <button class="btn btn-secondary m-2 flex-fill" type="submit" th:name="cancel" th:value="false" th:text="'Back to active'"></button>
+                            </form>
+                            <form class="d-flex flex-fill" th:if="not ${event.isCancelled}" th:action="@{/event/{id}/cancel(id=${event.eventId})}">
+                                <button class="btn btn-warning m-2 flex-fill" type="submit" th:name="cancel" th:value="true" th:text="'Cancel this Event'"></button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Search widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Search</div>
+                        <div class="card-body">
+                            <form th:action="@{/event/search}" class="input-group">
+                                <input name="query" class="form-control" type="search" placeholder="Enter event title..." aria-label="Search"/>
+                                <button class="btn btn-primary" id="button-search" type="submit">Go!</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Categories widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Categories</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <ul class="list-unstyled mb-0">
+                                        <li><a href="#!">Road Runner</a></li>
+                                        <li><a href="#!">Trail</a></li>
+                                        <li><a href="#!">Marathon</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Side widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Side Widget</div>
+                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+                    </div>
+                </div>
+                <div class="d-flex m-auto w-75">
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <!-- Comment form-->
+                            <form class="mb-4">
+                                <label>
+                                    <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                                </label>
+                            </form>
+                            <!-- Single comment-->
+                            <div class="d-flex">
+                                <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                <div class="ms-3">
+                                    <div class="fw-bold">Commenter Name</div>
+                                    When I look at the universe and all the ways the universe wants to kill us, I find it hard to reconcile that with statements of beneficence.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

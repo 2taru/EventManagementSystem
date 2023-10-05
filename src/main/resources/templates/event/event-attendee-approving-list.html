@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Approving</title>
+
+</head>
+<body layout:fragment="body" class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+
+    <!-- Page Content-->
+    <section class="py-2">
+        <div class="container px-3 mt-5 mb-3">
+            <div th:if="${param.success}" class="alert alert-success">
+                Success!
+            </div>
+            <div class="text-center mb-3">
+                <h1 class="fw-bolder">Approving</h1>
+            </div>
+            <ul class="list-group" th:each="eventAttendee : ${eventAttendees}">
+                <li class="list-group-item m-1 d-flex justify-content-between">
+                    <div class="d-flex w-75 align-items-center flex-wrap">
+                        <a class="fw-bolder text-decoration-none link-dark"
+                           th:href="@{/user/{username}(username=${eventAttendee.attendee.username})}"
+                           th:text="'@' + ${eventAttendee.attendee.username}"></a>
+                        <div class="mx-1" th:text="'wants to participate in'"></div>
+                        <a class="fw-bolder text-decoration-none link-dark"
+                           th:href="@{/event/{eventId}(eventId=${eventAttendee.event.eventId})}"
+                           th:text="${eventAttendee.event.name}"></a>
+                    </div>
+                    <div class="d-flex flex-wrap flex-fill">
+                        <a class="m-1 btn btn-primary flex-fill"
+                           th:href="@{/event/{eventId}/attendee/{attendeeId}/approve(eventId=${eventAttendee.event.eventId}, attendeeId=${eventAttendee.attendee.userId})}"
+                           th:text="Approve"></a>
+                        <a class="m-1 btn btn-warning flex-fill"
+                           th:href="@{/event/{eventId}/attendee/{attendeeId}/disapprove(eventId=${eventAttendee.event.eventId}, attendeeId=${eventAttendee.attendee.userId})}"
+                           th:text="Disapprove"></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

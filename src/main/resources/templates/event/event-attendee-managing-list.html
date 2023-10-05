@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Attended Events</title>
+
+</head>
+<body layout:fragment="body" class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+
+    <!-- Page Content-->
+    <section class="py-2">
+        <div class="container px-3 mt-5 mb-3">
+            <div th:if="${param.success}" class="alert alert-success">
+                Success!
+            </div>
+            <div class="text-center mb-3">
+                <h1 class="fw-bolder">Attended Events</h1>
+            </div>
+            <ul class="list-group" th:each="eventAttendee : ${eventAttendees}">
+                <li class="list-group-item m-1 d-flex justify-content-between">
+                    <div class="d-flex w-75 align-items-center flex-wrap">
+                        <a class="fw-bolder text-decoration-none link-dark"
+                           th:href="@{/event/{eventId}(eventId=${eventAttendee.event.eventId})}"
+                           th:text="${eventAttendee.event.name}"></a>
+                    </div>
+                    <div class="d-flex flex-wrap flex-fill">
+                        <form th:if="${eventAttendee.status} == 'Attended' or ${eventAttendee.status} == 'Approved'"
+                              class="d-flex flex-fill" th:action="@{/event/{id}/skip(id=${eventAttendee.event.eventId})}">
+                            <button class="m-1 btn btn-danger flex-fill" type="submit"
+                                    th:name="redirect" th:value="'attended-list'" th:text="'Skip'"></button>
+                        </form>
+                        <div th:if="${eventAttendee.status} == 'Disapproved'"
+                             class="alert alert-warning p-0 py-1 my-1 mx-0 text-center flex-fill">
+                            You have been <strong>disapproved</strong> for this event!
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

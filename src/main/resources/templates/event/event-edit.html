@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Edit Event</title>
+
+</head>
+<body layout:fragment="body" class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+
+    <!-- Page Content-->
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <form role="form" method="post" th:action="@{/event/{eventId}/edit(eventId=${event.eventId})}" th:object="${event}">
+                <input type="hidden" th:field="*{eventId}">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="title">Title</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="title"
+                                name="title"
+                                th:field="*{name}"
+                                placeholder="Title">
+                        <div class="alert alert-warning mt-2" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="description">Description</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="description"
+                                name="description"
+                                th:field="*{description}"
+                                placeholder="Description">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="photoUrl">Photo Url</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="photoUrl"
+                                name="photoUrl"
+                                th:field="*{photoUrl}"
+                                placeholder="Photo Url">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="dateTime">Date</label>
+                        <input
+                                type="datetime-local"
+                                class="form-control"
+                                id="dateTime"
+                                name="dateTime"
+                                th:field="*{dateTime}">
+                        <div class="alert alert-warning mt-2" th:if="${#fields.hasErrors('dateTime')}" th:errors="*{dateTime}"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="maxAttendees">Max Attendees</label>
+                        <input
+                                type="number"
+                                class="form-control"
+                                id="maxAttendees"
+                                name="maxAttendees"
+                                th:field="*{maxAttendees}"
+                                placeholder="Max Attendees">
+                        <div class="alert alert-warning mt-2" th:if="${#fields.hasErrors('maxAttendees')}" th:errors="*{maxAttendees}"></div>                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Edit</button>
+            </form>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

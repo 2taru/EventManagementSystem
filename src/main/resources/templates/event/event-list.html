@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Event List</title>
+
+</head>
+<body layout:fragment="body" class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+
+    <!-- Page Content-->
+    <section class="py-2">
+        <div class="container px-3 mt-5 mb-3">
+            <div th:if="${param.success}" class="alert alert-success">
+                Success!
+            </div>
+            <div class="text-center mb-3">
+                <h1 class="fw-bolder">Find your Event</h1>
+            </div>
+            <form th:action="@{/event/search}" class="input-group">
+                <input name="query" class="form-control" type="search" placeholder="Enter event title..." aria-label="Search"/>
+                <button class="btn btn-primary" id="button-search" type="submit">Search</button>
+            </form>
+            <div class="row gx-5">
+                <div th:each="event :${eventResponse.getContent()}" class="col-lg-4 mt-5" >
+                    <div class="card h-100 shadow border-0">
+                        <img class="card-img-top" th:if="${event.photoUrl != null and not #strings.isEmpty(event.photoUrl)}" th:src="${event.photoUrl}"/>
+                        <img class="card-img-top" th:if="${#strings.isEmpty(event.photoUrl)}" src="https://dummyimage.com/600x350/6c757d/343a40"/>
+                        <div class="card-body p-4">
+<!--                            <div class="badge bg-primary bg-gradient rounded-pill mb-2">News</div>-->
+                            <a th:text="${event.name}" class="h3 fw-bolder text-decoration-none link-dark stretched-link text-break w-75" th:href="@{/event/{id}(id=${event.eventId})}"></a>
+                        </div>
+                        <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                            <div class="d-flex align-items-end justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div th:switch="${event.creator.photoUrl}" style="width: 20%;">
+                                        <img th:case="null"
+                                             src="https://th.bing.com/th/id/OIP.YCGQ25lthu82-vALQSw9gwHaHa?pid=ImgDet&rs=1"
+                                             class="rounded-circle me-3" style="width: 70%;"/>
+                                        <img th:case="*" th:src="${event.creator.photoUrl}"
+                                             class="rounded-circle me-3" style="width: 70%"/>
+                                    </div>
+                                    <div class="small">
+                                        <div class="fw-bold" th:text="'@' + ${event.creator.username}"></div>
+                                        <div class="text-muted" th:text="'Event date: ' + ${event.dateTime.toLocalDate()} + ' ' + ${event.dateTime.toLocalTime()}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3" th:text="'Attendees: ' + ${event.currentAttendees} + '/' + ${event.maxAttendees}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-3">
+                <div th:if="${eventResponse.pageNo != 0}">
+                    <a class="page-link mx-1" th:href="@{/event?pageNo=0}"><<</a>
+                </div>
+                <ul class="pagination"
+                    th:each="i : ${#numbers.sequence(T(java.lang.Math).max(0,  eventResponse.pageNo - 2), T(java.lang.Math).min(eventResponse.totalPages - 1,  eventResponse.pageNo + 3))}">
+                    <li th:if="${eventResponse.pageNo == i}" class="page-item mx-1 active">
+                        <a class="page-link" th:text="${i + 1}"></a>
+                    </li>
+                    <li th:if="${eventResponse.pageNo != i}" class="page-item mx-1">
+                        <form th:action="@{/event}">
+                            <button class="page-link" type="submit" th:name="pageNo" th:value="${i}" th:text="${i + 1}"></button>
+                        </form>
+                    </li>
+                </ul>
+                <div th:if="${eventResponse.pageNo != eventResponse.totalPages - 1}">
+                    <form th:action="@{/event}">
+                        <button class="page-link mx-1" type="submit" th:name="pageNo" th:value="${eventResponse.totalPages - 1}" th:text="'>>'"></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>
