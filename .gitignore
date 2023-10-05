@@ -34,3 +34,8 @@ build/
 
 ### .env ###
 .env
+
+### Docker Files ###
+instruction.txt
+Dockerfile
+docker-compose.yml
